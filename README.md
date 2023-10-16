@@ -1,4 +1,5 @@
 # STE - Simple Text Editor
+## Kacper Wiszniewski - II rok ISSP - Projekt C++ 2024 - semestr zimowy
 
 ## Harmonogram
 | Tydzień  | Opis                                                                             |
