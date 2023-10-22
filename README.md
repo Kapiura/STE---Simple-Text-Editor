@@ -1,17 +1,28 @@
 # STE - Simple Text Editor
-#### Kacper Wiszniewski - II rok ISSP - Projekt C++ 2024 - semestr zimowy
+##### Kacper Wiszniewski - II rok ISSP - Projekt C++ 2024 - semestr zimowy
 
 ## Harmonogram
+
 | Tydzień  | Opis                                                                             |
 | ---------|:--------------------------------------------------------------------------------:|
 | 1        | Organizacja projektu na github'ie oraz planowanie                                |
-| 2/3      | Wstępny rysopis aplikacji w towarzystwie nauki wybranych bibliotek, framework'ow |
+| 2-3      | Wstępny rysopis aplikacji w towarzystwie nauki wybranych bibliotek, framework'ow |
 | 4        | Wdrażanie podstawowych funkcji – pisanie, usuwanie, tworzenie nowych plików      |
 | 5        | Kolejne funkcje – zapis, modyfikacja, odczyt                                     |
 | 6        | Wdrożenie skrótów klawiszowych do kopiowania/wycinania/wklejania                 |
-| 7/8      | Organizacja projektu na github'ie oraz planowanie                                |
+| 7-8      | Organizacja projektu na github'ie oraz planowanie                                |
 | 9        | Możliwość zmiany czcionki                                                        |
 | 10       | Wprowadzenie możliwości personalizacji edytora                                   |
 | 11       | Poprawki estetyczne                                                              |
-| 12/13    | Poprawki błędów wszelakich                                                       |
+| 12-13    | Poprawki błędów wszelakich                                                       |
 | 14       | Prezentacja końcowa                                                              |
+
+
+## Task 1
+- Stowrzenie projektu na githubie, dodanie prowadzącego do projektu
+- Utworzenie pliku źródłowego
+- Utworzenie pliku konfiguracyjnego CMake
+- Zbudowanie projektu
+- Organizacja środowiska programistycznego (NeoVim)
+- Dodanie pliku .gitignore a w nim ignorowanie folderu build
+---
