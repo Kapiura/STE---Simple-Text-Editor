@@ -24,5 +24,6 @@
 - Utworzenie pliku konfiguracyjnego CMake
 - Zbudowanie projektu
 - Organizacja środowiska programistycznego (NeoVim)
-- Dodanie pliku .gitignore a w nim ignorowanie folderu build
+- Dodanie pliku .gitignore a w nim ignorowanie folderu build oraz lib
+- Stworzenie pliku main.cpp z możliwością budowy oraz uruchomienia okoienka bez żadnych większych możliwości, oprócz jego zamknięcia
 ---
