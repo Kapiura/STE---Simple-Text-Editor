@@ -7,7 +7,7 @@ int main() {
     }
 
     SDL_Window* window = SDL_CreateWindow(
-        "SDL Window",
+        "STE - SimpleTextEditor",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
         800,
