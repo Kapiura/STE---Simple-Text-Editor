@@ -7,10 +7,9 @@ project(STE)
 # Add an executable target
 add_executable(ste src/main.cpp)
 
-# Link SDL library
-find_package(SDL2 REQUIRED)
-target_link_libraries(ste PRIVATE SDL2::SDL2)
+# Add path to your SDL2 source directory
+add_subdirectory(lib/SDL2)
 
-# Include directories
-target_include_directories(ste PRIVATE include)
+# Link against the SDL2 library
+target_link_libraries(ste PRIVATE SDL2)
 
