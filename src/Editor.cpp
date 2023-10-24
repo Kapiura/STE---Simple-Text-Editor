@@ -14,6 +14,9 @@ Editor::Editor (const char *title, int width, int height)
   window = SDL_CreateWindow (title, SDL_WINDOWPOS_CENTERED,
                              SDL_WINDOWPOS_CENTERED, width, height,
                              SDL_WINDOW_SHOWN);
+
+  renderer = SDL_CreateRenderer (window, -1, SDL_RENDERER_ACCELERATED);
+
   if (!window)
     {
       std::cout << "Error during creating window: " << SDL_GetError () << "\n";
@@ -24,6 +27,7 @@ Editor::Editor (const char *title, int width, int height)
 Editor::~Editor ()
 {
   SDL_DestroyWindow (window);
+  SDL_DestroyRenderer (renderer);
   SDL_Quit ();
 }
 void
@@ -41,6 +45,10 @@ Editor::run ()
               quit = true;
             }
         }
+      SDL_SetRenderDrawColor (renderer, 255, 255, 255, 255);
+      SDL_RenderClear (renderer);
+      SDL_RenderPresent (renderer);
+
       SDL_Delay (16);
     }
 }

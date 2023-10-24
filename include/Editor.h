@@ -13,6 +13,7 @@ private:
   int width;
   int height;
   SDL_Window *window;
+  SDL_Renderer *renderer;
 };
 
 #endif // EDITOR_H
