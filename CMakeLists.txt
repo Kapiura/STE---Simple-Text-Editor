@@ -1,18 +1,21 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(STE)
+project(ste)
 
-add_executable(ste src/main.cpp src/Editor.cpp)
+# Add SDL2 CMake modules
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
 
-add_subdirectory(lib/SDL2)
+# Add all c source files under the src directory
+file(GLOB SOURCES "src/*.cpp")
+add_executable(${PROJECT_NAME} ${SOURCES})
+
+# Add all headers files under the include directory
+target_include_directories(${PROJECT_NAME} PRIVATE include)
 
 # Add SDL2 library
 find_package(SDL2 REQUIRED)
-target_link_libraries(${PROJECT_NAME} SDL2::Main)
+target_link_libraries(${PROJECT_NAME} SDL2)
 
 # Add SDL2_ttf library
 find_package(SDL2_ttf REQUIRED)
 target_link_libraries(${PROJECT_NAME} SDL2::TTF)
-
-
-target_sources(${PROJECT_NAME} PRIVATE include/Editor.h)
