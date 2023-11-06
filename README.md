@@ -32,4 +32,6 @@
 - Napotkanie problemu z inlcudowaniem czcionek z biblioteki SDL
 - Modyfikacja pliku cmake w celu naprawy tego błedu 
 - Możliwość uruchomienia prostego okienka z tytułem i białym tłem, którego rozmiar możemy modyfikować myszką
+- Jeśli nie uda się do konca 11.11.2023 zmienię biblioteke z SDL na FLTK w ktorej na pewno bedzie mi duzo łatwiej
 ---
+
