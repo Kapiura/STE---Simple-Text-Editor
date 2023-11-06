@@ -14,8 +14,5 @@ target_include_directories(${PROJECT_NAME} PRIVATE include)
 
 # Add SDL2 library
 find_package(SDL2 REQUIRED)
-target_link_libraries(${PROJECT_NAME} SDL2)
-
-# Add SDL2_ttf library
 find_package(SDL2_ttf REQUIRED)
-target_link_libraries(${PROJECT_NAME} SDL2::TTF)
+target_link_libraries(${PROJECT_NAME} SDL2::Main SDL2::TTF)
