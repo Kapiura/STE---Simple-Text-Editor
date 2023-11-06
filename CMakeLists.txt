@@ -15,3 +15,4 @@ target_link_libraries(ste PRIVATE SDL2)
 
 # Add the header files to the project
 target_sources(ste PRIVATE include/Editor.h)
+
