@@ -27,3 +27,9 @@
 - Dodanie pliku .gitignore a w nim ignorowanie folderu build oraz lib
 - Stworzenie pliku main.cpp z możliwością budowy oraz uruchomienia okoienka bez żadnych większych możliwości, oprócz jego zamknięcia
 ---
+
+## Task 2 
+- Napotkanie problemu z inlcudowaniem czcionek z biblioteki SDL
+- Modyfikacja pliku cmake w celu naprawy tego błedu 
+- Możliwość uruchomienia prostego okienka z tytułem i białym tłem, którego rozmiar możemy modyfikować myszką
+---
