@@ -6,7 +6,7 @@
 Editor::Editor (const char *title, int width, int height)
     : _title (title), _width (width), _height (height)
 {
-  // TTF_Init ();
+  TTF_Init ();
   if (SDL_Init (SDL_INIT_VIDEO) < 0)
     {
       std::cout << "Init SDL error: " << SDL_GetError () << "\n";
