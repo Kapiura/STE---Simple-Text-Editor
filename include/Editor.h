@@ -7,8 +7,9 @@
 
 class Editor {
 public:
-  Editor(const char *title, int width, int height);
+  Editor(const char *title, int width, int height, SDL_Color backgroundColor); 
   ~Editor();
+      
 
   void loop();
 
@@ -25,7 +26,9 @@ private:
   SDL_Texture *_textTexture;
   SDL_Surface *_surface;
   TTF_Font *_font;
-  SDL_Color _textColor;
+  SDL_Color _backgroundColor = {255,255,255,255};
+  SDL_Color _textColor = {255,255,255,255};
+  SDL_Color _themeColor = {255,255,255,255};
 };
 
 #endif // EDITOR_H
