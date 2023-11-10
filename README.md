@@ -39,4 +39,10 @@ Glew, OpenGL.
 - Możliwość uruchomienia prostego okienka z tytułem i białym tłem, którego rozmiar możemy modyfikować myszką
 - Jeśli nie uda się do konca 11.11.2023 zmienię biblioteke z SDL na FLTK w ktorej na pewno bedzie mi duzo łatwiej
 ---
-
+## Task 3 
+- Naprawienie błędu występującego z wczytwaniem biblioteki SDL a dokladniej z modułem odpowiadającym za czcionki (SDL_TTF)
+- Lekka zmiana struktury katalogów
+- Usuniecie katalogu ttf na rzecz katalogu assets, który nie tylko będzie zawierał czcionki, lecz także inne dołączane do programu pliki, czy to inne czcionki, graficzne etc.
+- Modyfikacja pliku konfiguracyjnego Cmake, który zmodyfikowałem przy pomocy repozytorium pewnego użytnownika [aminosbh](https://github.com/aminosbh/sdl2-ttf-sample)
+- Dodanie folderu cmake z plikami konfiguracyjnymi, pomagjące w lokalizacji bibliotek SDL, które rowniez należa do wyżej wynmienionego [użytkownika](https://github.com/aminosbh)
+- Lekkie zmiany w pliku nagłówkowym Editor.h, które jednak są mało znaczące
