@@ -7,7 +7,7 @@
 
 class Editor {
 public:
-  Editor(const char *title, int width, int height, SDL_Color backgroundColor); 
+  Editor(const char *title, int width, int height); 
   ~Editor();
       
 
