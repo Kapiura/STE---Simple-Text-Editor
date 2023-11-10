@@ -1,5 +1,4 @@
 #include "../include/Editor.h"
-
 int
 main ()
 {

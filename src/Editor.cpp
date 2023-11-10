@@ -6,7 +6,6 @@
 Editor::Editor (const char *title, int width, int height)
     : _title (title), _width (width), _height (height)
 {
-  TTF_Init ();
   if (SDL_Init (SDL_INIT_VIDEO) < 0)
     {
       std::cout << "Init SDL error: " << SDL_GetError () << "\n";
@@ -24,6 +23,11 @@ Editor::Editor (const char *title, int width, int height)
 
   _renderer = SDL_CreateRenderer (_window, -1, SDL_RENDERER_ACCELERATED);
 
+  // Initialize TTF
+  if (TTF_Init() < 0) {
+    std::cout << "TTF_Init Error: " << TTF_GetError() << "\n";
+    exit(-1);
+  }
   // _surface = TTF_RenderText_Solid (_font, "Hello", _textColor);
 
   if (!_window || !_renderer)
@@ -33,12 +37,14 @@ Editor::Editor (const char *title, int width, int height)
                 << SDL_GetError () << "\n";
       exit (-1);
     }
+    SDL_SetRenderDrawColor(_renderer, _backgroundColor.r, _backgroundColor.g, _backgroundColor.b, _backgroundColor.a);
 }
 
 Editor::~Editor ()
 {
-  SDL_DestroyWindow (_window);
   SDL_DestroyRenderer (_renderer);
+  SDL_DestroyWindow (_window);
+  TTF_Quit();
   SDL_Quit ();
 }
 void
@@ -57,7 +63,6 @@ Editor::loop ()
             }
         }
 
-      SDL_SetRenderDrawColor (_renderer, 255, 255, 255, 255);
       SDL_RenderClear (_renderer);
       SDL_RenderPresent (_renderer);
 
