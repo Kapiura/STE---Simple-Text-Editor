@@ -15,7 +15,7 @@ Glew, OpenGL.
 | 4        | Wdrażanie podstawowych funkcji – pisanie, usuwanie, tworzenie nowych plików      |
 | 5        | Kolejne funkcje – zapis, modyfikacja, odczyt                                     |
 | 6        | Wdrożenie skrótów klawiszowych do kopiowania/wycinania/wklejania                 |
-| 7-8      | Organizacja projektu na github'ie oraz planowanie                                |
+| 7-8      | Dodanie menu u góry typowego dla edytorów tekstowych                             |
 | 9        | Możliwość zmiany czcionki                                                        |
 | 10       | Wprowadzenie możliwości personalizacji edytora                                   |
 | 11       | Poprawki estetyczne                                                              |
