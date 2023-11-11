@@ -46,3 +46,12 @@ Glew, OpenGL.
 - Modyfikacja pliku konfiguracyjnego Cmake, który zmodyfikowałem przy pomocy repozytorium pewnego użytnownika [aminosbh](https://github.com/aminosbh/sdl2-ttf-sample)
 - Dodanie folderu cmake z plikami konfiguracyjnymi, pomagjące w lokalizacji bibliotek SDL, które rowniez należa do wyżej wynmienionego [użytkownika](https://github.com/aminosbh)
 - Lekkie zmiany w pliku nagłówkowym Editor.h, które jednak są mało znaczące
+---
+## Task4
+- Przedefinowanie całego projektu, dodanie struktury klas 
+- Projekt składa się z klas: EditorWindow, MenuBar, Application, FileManager, SearchEngine, TextEditor
+- Akutalizacja klasy Application do uruchamiania pętli programu
+- Tworzenie oraz redner okna głownego w klasie EditorWindow
+- Usunięcie klasy Editor która miała zarządzać oknami, lecz po przemyśleniach zmieniłem całą strukture klas
+- Aktualnie po zbudowaniu projektu oraz jego włączeniu pojawia się nam na środku monitora okienko z białym tłem o rozmiarach 600x800 o nazwie STE-SimpleTextEditor z możliwością zmiany rozmiaru okna za pomocą myszki
+---
