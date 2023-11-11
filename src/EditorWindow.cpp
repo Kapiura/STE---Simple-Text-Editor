@@ -1,5 +1,6 @@
 #include "../include/EditorWindow.h"
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_error.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_ttf.h>
 #include <iostream>
@@ -37,12 +38,21 @@ EditorWindow::EditorWindow (const char *title, int height, int width)
       std::cout << "SDL error while creating renderer: " << SDL_GetError ()
                 << "\n";
     }
+  // Lodaing default font
+  _font = TTF_OpenFont ("assets/jetbrainsmono/JetBrainsMono-Regular.ttf", 24);
+  // Check if font is valid
+  if (!_font)
+    {
+      std::cout << "SDL TTF error loading font: " << SDL_GetError () << "\n";
+      exit (-1);
+    }
 }
 
 EditorWindow::~EditorWindow ()
 {
   SDL_DestroyRenderer (_renderer);
   SDL_DestroyWindow (_window);
+  TTF_CloseFont (_font);
   TTF_Quit ();
   SDL_Quit ();
   std::cout << "EditorWindow object has been destroyed\n";

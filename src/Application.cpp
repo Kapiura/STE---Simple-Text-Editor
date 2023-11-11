@@ -6,7 +6,7 @@
 Application::Application ()
 {
   std::cout << "Application object has been created\n";
-  _window = new EditorWindow ("STE - SimpleTextEditor", 800, 600);
+  _window = new EditorWindow ("STE - SimpleTextEditor", 600, 800);
 }
 
 Application::~Application ()

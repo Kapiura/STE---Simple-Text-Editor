@@ -4,6 +4,7 @@
 #define EDITORWINDOW_H
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 class EditorWindow {
 public:
@@ -22,6 +23,7 @@ private:
   int _width;
   SDL_Window *_window;
   SDL_Renderer *_renderer;
+  TTF_Font *_font;
 };
 
 #endif // EDITORWINDOW_H
