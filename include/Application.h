@@ -14,6 +14,6 @@ public:
 
 private:
   EditorWindow *_window;
-  TextEditor *_textEdtiro;
+  TextEditor *_textEditor;
 };
 #endif // APPLICATION_H

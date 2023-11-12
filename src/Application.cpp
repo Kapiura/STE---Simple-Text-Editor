@@ -7,11 +7,13 @@ Application::Application ()
 {
   std::cout << "Application object has been created\n";
   _window = new EditorWindow ("STE - SimpleTextEditor", 600, 800);
+  _textEditor = new TextEditor (_window->getRenderer (), *_window);
 }
 
 Application::~Application ()
 {
   std::cout << "Application object has been destroyed\n";
+  delete _textEditor;
   delete _window;
 }
 
@@ -30,9 +32,11 @@ Application::run ()
             {
               quit = true;
             }
-
+          _textEditor->handleEvents (event);
           _window->update ();
           _window->renderer ();
+          _textEditor->render ();
+          _textEditor->update ();
         }
     }
   return 0;

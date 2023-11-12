@@ -3,6 +3,7 @@
 #include <SDL2/SDL_error.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_video.h>
 #include <iostream>
 
 EditorWindow::EditorWindow (const char *title, int height, int width)
@@ -38,14 +39,7 @@ EditorWindow::EditorWindow (const char *title, int height, int width)
       std::cout << "SDL error while creating renderer: " << SDL_GetError ()
                 << "\n";
     }
-  // Lodaing default font
-  _font = TTF_OpenFont ("assets/jetbrainsmono/JetBrainsMono-Regular.ttf", 24);
-  // Check if font is valid
-  if (!_font)
-    {
-      std::cout << "SDL TTF error loading font: " << SDL_GetError () << "\n";
-      exit (-1);
-    }
+  SDL_SetWindowMinimumSize (_window, 150, 100);
 }
 
 EditorWindow::~EditorWindow ()
@@ -66,7 +60,28 @@ EditorWindow::update ()
 void
 EditorWindow::renderer ()
 {
-  SDL_SetRenderDrawColor (_renderer, 255, 255, 255, 255);
   SDL_RenderClear (_renderer);
   SDL_RenderPresent (_renderer);
+}
+
+int
+EditorWindow::getWindowWidth () const
+{
+  int width, height;
+  SDL_GetWindowSize (_window, &width, &height);
+  return width;
+}
+
+int
+EditorWindow::getWindowHeight () const
+{
+  int width, height;
+  SDL_GetWindowSize (_window, &width, &height);
+  return height;
+}
+
+SDL_Renderer *
+EditorWindow::getRenderer () const
+{
+  return _renderer;
 }

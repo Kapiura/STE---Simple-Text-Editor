@@ -14,6 +14,9 @@ public:
   SDL_Renderer *getRenderer() const;
   SDL_Window *getWindow() const;
 
+  int getWindowHeight() const;
+  int getWindowWidth() const;
+
   void update();
   void renderer();
 
