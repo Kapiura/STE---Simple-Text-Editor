@@ -10,18 +10,19 @@ W trakcie projektowania będę dbał o ergonomiczność interfejsu, zapewniając
 ## Harmonogram
 
 | Tydzień  | Opis                                                                             |
-| ---------|:--------------------------------------------------------------------------------:|
-| 1        | Organizacja projektu na github'ie oraz planowanie                                |
-| 2-3      | Wstępny rysopis aplikacji w towarzystwie nauki wybranych bibliotek, framework'ow |
-| 4        | Wdrażanie podstawowych funkcji – pisanie, usuwanie, tworzenie nowych plików      |
-| 5        | Kolejne funkcje – zapis, modyfikacja, odczyt                                     |
-| 6        | Wdrożenie skrótów klawiszowych do kopiowania/wycinania/wklejania                 |
-| 7-8      | Dodanie menu u góry typowego dla edytorów tekstowych                             |
-| 9        | Możliwość zmiany czcionki                                                        |
-| 10       | Wprowadzenie możliwości personalizacji edytora                                   |
-| 11       | Poprawki estetyczne                                                              |
-| 12-13    | Poprawki błędów wszelakich                                                       |
-| 14       | Prezentacja końcowa                                                              |
+| -------- | -------------------------------------------------------------------------------- |
+| 1        | Organizacja projektu na platformie GitHub oraz opracowanie planu projektu       |
+| 2-3      | Opracowanie wstępnego opisu aplikacji wraz z badaniem wybranych bibliotek i frameworków |
+| 4        | Implementacja podstawowych funkcji, takich jak pisanie, usuwanie, tworzenie nowych plików |
+| 5        | Rozwinięcie funkcjonalności o zapis, modyfikację i odczyt dokumentów            |
+| 6        | Wprowadzenie skrótów klawiszowych do kopiowania, wycinania i wklejania           |
+| 7-8      | Dodanie menu w górnej części interfejsu, zgodnego z konwencją edytorów tekstowych |
+| 9        | Implementacja możliwości zmiany czcionki w edytorze                              |
+| 10       | Dodanie opcji personalizacji interfejsu edytora                                 |
+| 11       | Przeprowadzenie poprawek estetycznych w interfejsie                              |
+| 12-13    | Rozwiązanie wszelakich błędów i poprawki jakościowe                             |
+| 14       | Przygotowanie i prezentacja końcowa projektu                                     |
+
 
 
 ## Task 1
