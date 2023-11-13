@@ -1,10 +1,11 @@
 # STE - Simple Text Editor
 ##### Kacper Wiszniewski - II rok ISSP - Projekt C++ 2024 - semestr zimowy
 
-Prosty edytor tekstu w dostępny przejrzystej i eleganckiej oprawie graficznej.
-Założeniami są funkcje takie jak tworzenie nowych plikow, zapis, odczyt, menu,modyfikacja juz istniejacych, funkcje wklej/wytnij/skopiuj, szukanie wyrazów, fraz,zmianę czcionki, kolorów tła oraz tekstu i co jeszcze do głowy mi przyjdzie.
-Do wykonania tego projektu wykorzystać planuję biblioteki SDL2, FLTK, FreeType,
-Glew, OpenGL.
+Projektuje prosty edytor tekstu, który będzie cechował się przejrzystym i eleganckim interfejsem graficznym. Główne funkcjonalności obejmują tworzenie nowych plików, zapisywanie, odczytywanie, modyfikowanie istniejących dokumentów, a także standardowe operacje edycji, takie jak wycinanie, kopiowanie, i wklejanie. Dodatkowo, planuję zaimplementować funkcje wyszukiwania słów i fraz, zmiany czcionki oraz dostosowywania kolorów tła i tekstu.
+
+W celu realizacji tego projektu, zamierzam skorzystać z różnych bibliotek programistycznych, takich jak SDL2, FLTK, FreeType, Glew, oraz OpenGL. Te narzędzia umożliwią mi stworzenie responsywnego interfejsu użytkownika, obsługę różnych operacji na tekście, a także dostarczą narzędzi do manipulacji grafiką i czcionkami.
+
+W trakcie projektowania będę dbał o ergonomiczność interfejsu, zapewniając użytkownikowi intuicyjną obsługę oraz umożliwiając skuteczną pracę z edytorem tekstu. Dodatkowo, zamierzam zadbać o estetykę oprawy graficznej, aby użytkownik mógł korzystać z aplikacji w komfortowy i przyjemny sposób.
 
 ## Harmonogram
 
