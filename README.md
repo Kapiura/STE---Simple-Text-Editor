@@ -26,34 +26,37 @@ W trakcie projektowania będę dbał o ergonomiczność interfejsu, zapewniając
 
 
 ## Task 1
-- Stowrzenie projektu na githubie, dodanie prowadzącego do projektu
+- Stworzenie projektu na GitHubie, dodanie prowadzącego do projektu
 - Utworzenie pliku źródłowego
 - Utworzenie pliku konfiguracyjnego CMake
 - Zbudowanie projektu
 - Organizacja środowiska programistycznego (NeoVim)
-- Dodanie pliku .gitignore a w nim ignorowanie folderu build oraz lib
-- Stworzenie pliku main.cpp z możliwością budowy oraz uruchomienia okoienka bez żadnych większych możliwości, oprócz jego zamknięcia
+- Dodanie pliku .gitignore z ignorowaniem folderu build oraz lib
+- Stworzenie pliku main.cpp z możliwością budowy oraz uruchomienia okienka bez żadnych większych funkcji, oprócz jego zamknięcia
 ---
 
 ## Task 2 
-- Napotkanie problemu z inlcudowaniem czcionek z biblioteki SDL
-- Modyfikacja pliku cmake w celu naprawy tego błedu 
+- Napotkanie problemu z includowaniem czcionek z biblioteki SDL
+- Modyfikacja pliku cmake w celu naprawy tego błędu 
 - Możliwość uruchomienia prostego okienka z tytułem i białym tłem, którego rozmiar możemy modyfikować myszką
-- Jeśli nie uda się do konca 11.11.2023 zmienię biblioteke z SDL na FLTK w ktorej na pewno bedzie mi duzo łatwiej
+- Jeśli nie uda się do końca 11.11.2023, zmienię bibliotekę z SDL na FLTK, w której na pewno będzie mi łatwiej
 ---
+
 ## Task 3 
-- Naprawienie błędu występującego z wczytwaniem biblioteki SDL a dokladniej z modułem odpowiadającym za czcionki (SDL_TTF)
+- Naprawienie błędu związane z wczytywaniem biblioteki SDL, a dokładniej z modułem odpowiadającym za czcionki (SDL_TTF)
 - Lekka zmiana struktury katalogów
-- Usuniecie katalogu ttf na rzecz katalogu assets, który nie tylko będzie zawierał czcionki, lecz także inne dołączane do programu pliki, czy to inne czcionki, graficzne etc.
-- Modyfikacja pliku konfiguracyjnego Cmake, który zmodyfikowałem przy pomocy repozytorium pewnego użytnownika [aminosbh](https://github.com/aminosbh/sdl2-ttf-sample)
-- Dodanie folderu cmake z plikami konfiguracyjnymi, pomagjące w lokalizacji bibliotek SDL, które rowniez należa do wyżej wynmienionego [użytkownika](https://github.com/aminosbh)
-- Lekkie zmiany w pliku nagłówkowym Editor.h, które jednak są mało znaczące
+- Usunięcie katalogu "ttf" na rzecz katalogu "assets", który będzie zawierał nie tylko czcionki, lecz także inne pliki dołączane do programu, takie jak inne czcionki, grafiki, itp.
+- Modyfikacja pliku konfiguracyjnego CMake, z pomocą repozytorium użytkownika [aminosbh](https://github.com/aminosbh/sdl2-ttf-sample)
+- Dodanie folderu "cmake" z plikami konfiguracyjnymi pomagającymi w lokalizacji bibliotek SDL, również dostarczonymi przez [wyżej wymienionego użytkownika](https://github.com/aminosbh)
+- Lekkie zmiany w pliku nagłówkowym "Editor.h", jednak mające niewielki wpływ na funkcjonalność
 ---
-## Task4
-- Przedefinowanie całego projektu, dodanie struktury klas 
+
+## Task 4
+- Przedefiniowanie całego projektu, dodanie struktury klas 
 - Projekt składa się z klas: EditorWindow, MenuBar, Application, FileManager, SearchEngine, TextEditor
-- Akutalizacja klasy Application do uruchamiania pętli programu
-- Tworzenie oraz redner okna głownego w klasie EditorWindow
-- Usunięcie klasy Editor która miała zarządzać oknami, lecz po przemyśleniach zmieniłem całą strukture klas
-- Aktualnie po zbudowaniu projektu oraz jego włączeniu pojawia się nam na środku monitora okienko z białym tłem o rozmiarach 600x800 o nazwie STE-SimpleTextEditor z możliwością zmiany rozmiaru okna za pomocą myszki
+- Aktualizacja klasy "Application" do uruchamiania pętli programu
+- Tworzenie oraz renderowanie okna głównego w klasie "EditorWindow"
+- Usunięcie klasy "Editor", która miała zarządzać oknami, lecz po przemyśleniach zmieniłem całą strukturę klas
+- Obecnie po zbudowaniu projektu i jego uruchomieniu pojawia się okno o białym tle o rozmiarze 600x800 o nazwie "STE-SimpleTextEditor" z możliwością zmiany rozmiaru okna za pomocą myszki
 ---
+
