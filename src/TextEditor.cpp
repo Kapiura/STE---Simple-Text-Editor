@@ -114,14 +114,14 @@ TextEditor::handleEvents (SDL_Event &e)
             }
           break;
         case SDLK_DOWN:
-          if (static_cast<int> (_textInput.size ()) < cursorOnCurrentLine)
+          if (static_cast<int> (_textInput.size ()) > cursorOnCurrentLine)
             {
               cursorOnCurrentLine += 1;
             }
           break;
         case SDLK_RIGHT:
           if (static_cast<int> (_textInput[cursorOnCurrentLine].length ())
-              < cursonOnCurrentChar)
+              > cursonOnCurrentChar)
             {
               cursonOnCurrentChar += 1;
             }
