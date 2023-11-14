@@ -27,8 +27,8 @@ EditorWindow::EditorWindow (const char *title, int height, int width)
   _window = SDL_CreateWindow (_title, SDL_WINDOWPOS_CENTERED,
                               SDL_WINDOWPOS_CENTERED, _width, _height,
                               SDL_WINDOW_RESIZABLE);
-  _renderer = SDL_CreateRenderer (_window, -1, SDL_RENDERER_ACCELERATED);
-  // CHeck if renderer and window was created valid
+  _renderer = SDL_CreateRenderer (_window, -1, SDL_RENDERER_SOFTWARE);
+  // Check if renderer and window was created valid
   if (!_window)
     {
       std::cout << "SDL error while creating window: " << SDL_GetError ()

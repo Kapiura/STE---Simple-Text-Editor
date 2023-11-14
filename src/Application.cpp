@@ -22,7 +22,10 @@ Application::run ()
 {
   bool quit = false;
   SDL_Event event;
-  SDL_WaitEvent (&event);
+  // SDL_WaitEvent (&event);
+  //
+  // Uint32 startTime = SDL_GetTicks ();
+  // Uint32 lastTime = startTime;
 
   while (!quit)
     {
@@ -32,12 +35,26 @@ Application::run ()
             {
               quit = true;
             }
+
           _textEditor->handleEvents (event);
           _window->update ();
+          _textEditor->update ();
           _window->renderer ();
           _textEditor->render ();
-          _textEditor->update ();
+          // _textEditor->checkVisibleCursor ();
         }
+
+      // if (SDL_PollEvent (&event) != 0)
+      //   {
+      //     Uint32 currentTime = SDL_GetTicks ();
+      //     Uint32 elapsedTime = currentTime - lastTime;
+      //
+      //     if (elapsedTime >= 10)
+      //       {
+      //         _textEditor->checkVisibleCursor ();
+      //
+      //         lastTime = currentTime;
+      //       }
     }
   return 0;
 }
