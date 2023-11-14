@@ -59,4 +59,19 @@ W trakcie projektowania będę dbał o ergonomiczność interfejsu, zapewniając
 - Usunięcie klasy "Editor", która miała zarządzać oknami, lecz po przemyśleniach zmieniłem całą strukturę klas
 - Obecnie po zbudowaniu projektu i jego uruchomieniu pojawia się okno o białym tle o rozmiarze 600x800 o nazwie "STE-SimpleTextEditor" z możliwością zmiany rozmiaru okna za pomocą myszki
 ---
-
+## Task 5
+- Wprowadzenie obsługi klawiatury
+    - Implementacja możliwości wprowadzania znaków z klawiatury
+    - Umożliwienie dynamicznej edycji tekstu w edytorze
+- Dodanie kursora
+    - Wprowadzenie kursora w celu wizualnego wskazywania akturalnej pozycji w tekście
+    - Możliwość dodawania, usuwania i modyfikowania tekstu za pomocą kursora
+- Implementacja dunkcji dodawania nowych linii tekstu
+- Dodanie funkcji umożliwiającej usunięcie znaku z linii, na której akutalnie znajduje się kursor
+- Poruszanie się za pomocą strzałek
+    - Umożliwianie poruszania się po teksćie za pomocą strzałek
+    - Obsługa poruszania się zarówno wzdłuż linii, jak i między słowami
+- Błędy
+    - Automatyczne dodawanie białych znaków na końcu linii, mimo że nie istnieje on w zmiennej typu string
+    - Błędne działanie przesuwania krusora w niektorych przypadkach
+---
