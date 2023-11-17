@@ -23,6 +23,9 @@ W trakcie projektowania będę dbał o ergonomiczność interfejsu, zapewniając
 | 12-13    | Rozwiązanie wszelakich błędów i poprawki jakościowe                             |
 | 14       | Przygotowanie i prezentacja końcowa projektu                                     |
 
+## Przykład działania prototypu
+![](https://github.com/Kapiura/STE---Simple-Text-Editor/blob/main/Reademe_assets/FirstProto.gif)
+
 ### Update 6
 
 - Usunięcie błędów związanych z poruszaniem się kursorem po linijkach oraz wyrazach.
