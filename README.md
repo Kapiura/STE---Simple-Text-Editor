@@ -24,7 +24,7 @@ W trakcie projektowania będę dbał o ergonomiczność interfejsu, zapewniając
 | 14       | Przygotowanie i prezentacja końcowa projektu                                     |
 
 ## Przykład działania prototypu
-![](https://github.com/Kapiura/STE---Simple-Text-Editor/blob/main/Reademe_assets/FirstProto.gif)
+![](https://github.com/Kapiura/STE---Simple-Text-Editor/blob/main/Reademe_assets/2ndPrototype.gif)
 
 ### Update 6
 
