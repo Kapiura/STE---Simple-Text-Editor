@@ -12,7 +12,7 @@
 TextEditor::TextEditor (SDL_Renderer *renderer,
                         const EditorWindow &editorWindow)
     : _renderer (renderer), _font (nullptr), _editorWindow (editorWindow),
-      fontSize (24), cursorOnCurrentLine (0), cursonOnCurrentChar (0),
+      fontSize (24), cursorOnCurrentLine (0), cursonOnCurrentChar (-1),
       _cursorVisible (true)
 {
   std::cout << "TextEditor object has been created\n";
@@ -104,30 +104,46 @@ TextEditor::handleEvents (SDL_Event &e)
         {
         case SDLK_RETURN:
           cursorOnCurrentLine += 1;
-          cursonOnCurrentChar = 0;
+          cursonOnCurrentChar = -1;
           _textInput.push_back ("");
           break;
         case SDLK_UP:
           if (cursorOnCurrentLine > 0)
             {
               cursorOnCurrentLine -= 1;
+              if (cursonOnCurrentChar
+                  > static_cast<int> (_textInput[cursorOnCurrentLine].size ())
+                        - 1)
+                {
+                  cursonOnCurrentChar
+                      = static_cast<int> (
+                            _textInput[cursorOnCurrentLine].size ())
+                        - 1;
+                }
             }
           break;
         case SDLK_DOWN:
-          if (static_cast<int> (_textInput.size ()) > cursorOnCurrentLine)
+          if (static_cast<int> (_textInput.size ()) - 1 > cursorOnCurrentLine)
             {
               cursorOnCurrentLine += 1;
             }
+          if (cursonOnCurrentChar
+              > static_cast<int> (_textInput[cursorOnCurrentLine].size ()) - 1)
+            {
+              cursonOnCurrentChar
+                  = static_cast<int> (_textInput[cursorOnCurrentLine].size ())
+                    - 1;
+            }
           break;
         case SDLK_RIGHT:
-          if (static_cast<int> (_textInput[cursorOnCurrentLine].length ())
+          if (static_cast<int> (_textInput[cursorOnCurrentLine].size () - 1)
               > cursonOnCurrentChar)
             {
               cursonOnCurrentChar += 1;
             }
           break;
         case SDLK_LEFT:
-          if (cursonOnCurrentChar > 0)
+          if (cursonOnCurrentChar >= 0)
             {
               cursonOnCurrentChar -= 1;
             }
@@ -135,72 +151,47 @@ TextEditor::handleEvents (SDL_Event &e)
         case SDLK_BACKSPACE:
           if (!_textInput[cursorOnCurrentLine].empty ())
             {
-              if (cursonOnCurrentChar > 0)
+              if (cursonOnCurrentChar > -1)
                 {
                   _textInput[cursorOnCurrentLine].erase (cursonOnCurrentChar,
                                                          1);
                   cursonOnCurrentChar -= 1;
                 }
             }
+          else if (_textInput[cursorOnCurrentLine].empty ()
+                   && cursorOnCurrentLine > 0)
+            {
+              _textInput.erase (_textInput.begin () + cursorOnCurrentLine);
+              cursorOnCurrentLine -= 1;
+              cursonOnCurrentChar
+                  = static_cast<int> (_textInput[cursorOnCurrentLine].size ())
+                    - 1;
+            }
           break;
         default:
-          char pressedChar = static_cast<char> (e.key.keysym.sym);
-          _textInput[cursorOnCurrentLine] += pressedChar;
-          cursonOnCurrentChar += 1;
+          if ((e.key.keysym.sym >= SDLK_SPACE && e.key.keysym.sym <= SDLK_z))
+            {
+              char pressedChar = static_cast<char> (e.key.keysym.sym);
+              _textInput[cursorOnCurrentLine] += pressedChar;
+              cursonOnCurrentChar += 1;
+            }
 
           break;
         }
     }
-  // if (e.type == SDL_KEYDOWN)
-  //   {
-  //     else if (e.key.keysym.sym == SDLK_BACKSPACE)
-  //       {
-  //         if (!_textInput.empty ())
-  //           {
-  //             if (!_textInput[cursorOnCurrentLine].empty ())
-  //               _textInput[cursorOnCurrentLine].erase (cursonOnCurrentChar,
-  //               1);
-  //             // _textInput[cursorOnCurrentLine].pop_back ();
-  //             if (cursonOnCurrentChar > 0)
-  //               cursonOnCurrentChar -= 1;
-  //           }
-  //       }
-  //   else
-  //     {
-  //       char pressedChar = static_cast<char> (e.key.keysym.sym);
-  //       _textInput[cursorOnCurrentLine] += pressedChar;
-  //       cursonOnCurrentChar += 1;
-  //     }
-  // }
 }
 
 void
 TextEditor::update ()
 {
-  // this->changeCursorTimer ();
-  // this->checkVisibleCursor();
 
-  int textLenght = _textInput[cursorOnCurrentLine].length ();
-  int textAreaWidth = _textArea.w;
-
-  if (textLenght * fontSize > textAreaWidth)
-    {
-      _textInput.push_back ("");
-    }
-  std::cout << "cursor: " << cursonOnCurrentChar << "\n";
   std::cout << "------------------------------------------------\n";
+  std::cout << "cursor: " << cursonOnCurrentChar << "\n";
+  std::cout << "line: " << cursorOnCurrentLine << "\n";
   for (auto &line : _textInput)
     {
       std::cout << "\"" << line << "\""
                 << "\n";
     }
+  std::cout << "------------------------------------------------\n";
 }
-
-// void
-// TextEditor::checkVisibleCursor ()
-// {
-//   if (_cursorTimer % 5 == 0)
-//     {
-//       _cursorVisible = !_cursorVisible;
-//     }
-// }

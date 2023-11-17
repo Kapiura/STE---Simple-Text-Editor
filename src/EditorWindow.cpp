@@ -5,9 +5,10 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_video.h>
 #include <iostream>
+#include <string>
 
-EditorWindow::EditorWindow (const char *title, int height, int width)
-    : _title (title), _height (height), _width (width)
+EditorWindow::EditorWindow (std::string title, int height, int width)
+    : _title (title), _file_name ("New_file"), _height (height), _width (width)
 {
   // Simple text durign creating an object of EditorWindow class
   std::cout << "EditorWindow object has been created\n";
@@ -24,7 +25,8 @@ EditorWindow::EditorWindow (const char *title, int height, int width)
       exit (-1);
     }
   // Creating window and renderer
-  _window = SDL_CreateWindow (_title, SDL_WINDOWPOS_CENTERED,
+  std::string temp = _title + " - " + _file_name;
+  _window = SDL_CreateWindow (temp.c_str (), SDL_WINDOWPOS_CENTERED,
                               SDL_WINDOWPOS_CENTERED, _width, _height,
                               SDL_WINDOW_RESIZABLE);
   _renderer = SDL_CreateRenderer (_window, -1, SDL_RENDERER_SOFTWARE);
