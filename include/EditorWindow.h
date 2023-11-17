@@ -5,10 +5,11 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <string>
 
 class EditorWindow {
 public:
-  EditorWindow(const char *title, int height, int width);
+  EditorWindow(std::string title, int height, int width);
   ~EditorWindow();
 
   SDL_Renderer *getRenderer() const;
@@ -21,7 +22,8 @@ public:
   void renderer();
 
 private:
-  const char *_title;
+  std::string _title;
+  std::string _file_name;
   int _height;
   int _width;
   SDL_Window *_window;

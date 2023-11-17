@@ -33,10 +33,7 @@ private:
   TTF_Font *_font;
   EditorWindow _editorWindow;
   std::vector<std::string> _textInput;
-  // std::string _textInput;
-  // int _cursorTimer;
   int fontSize;
-  std::vector<int> maxTextWidth;
   int cursorOnCurrentLine;
   int cursonOnCurrentChar;
 
