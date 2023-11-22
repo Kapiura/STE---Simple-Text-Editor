@@ -21,7 +21,7 @@ public:
   void update();
   void renderer();
 
-private:
+protected:
   std::string _title;
   std::string _file_name;
   int _height;

@@ -1,6 +1,8 @@
 #include "../include/Application.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_events.h>
+#include <SDL2/SDL_messagebox.h>
+#include <cstdlib>
 #include <iostream>
 
 Application::Application ()
@@ -22,18 +24,51 @@ Application::run ()
 {
   bool quit = false;
   SDL_Event event;
-  // SDL_WaitEvent (&event);
-  //
-  // Uint32 startTime = SDL_GetTicks ();
-  // Uint32 lastTime = startTime;
 
   while (!quit)
     {
       while (SDL_PollEvent (&event) != 0)
         {
+
           if (event.type == SDL_QUIT)
             {
-              quit = true;
+              int btn;
+              SDL_MessageBoxData messageboxdata;
+              messageboxdata.flags = SDL_MESSAGEBOX_INFORMATION;
+              messageboxdata.window = _window->getWindow ();
+              messageboxdata.title = "Are you really wanna leave the program?";
+              messageboxdata.message
+                  = "Are you really want to quit without saving?";
+              SDL_MessageBoxButtonData buttons[] = {
+                { SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Yes" },
+                { SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "No" },
+              };
+              messageboxdata.buttons = buttons;
+              messageboxdata.numbuttons = SDL_arraysize (buttons);
+              if (SDL_ShowMessageBox (&messageboxdata, &btn) < 0)
+                {
+                  SDL_LogError (
+                      SDL_LOG_CATEGORY_APPLICATION,
+                      "Error displaying message box! SDL_Error: %s\n",
+                      SDL_GetError ());
+                }
+              if (btn == 0)
+                {
+                  quit = true;
+                }
+              else if (btn == 1)
+                {
+                  // _saving_window = new SavingWindow ();
+                  std::string textContent = _textEditor->getTextContent ();
+                  std::string filePathToSave = "~";
+                  std::string command = "xdg-open " + filePathToSave;
+                  if (system (command.c_str ()) == -1)
+                    {
+                      std::cerr << "Error opening file manager! Failed to "
+                                   "execute command."
+                                << std::endl;
+                    }
+                }
             }
 
           _textEditor->handleEvents (event);
@@ -41,20 +76,7 @@ Application::run ()
           _textEditor->update ();
           _window->renderer ();
           _textEditor->render ();
-          // _textEditor->checkVisibleCursor ();
         }
-
-      // if (SDL_PollEvent (&event) != 0)
-      //   {
-      //     Uint32 currentTime = SDL_GetTicks ();
-      //     Uint32 elapsedTime = currentTime - lastTime;
-      //
-      //     if (elapsedTime >= 10)
-      //       {
-      //         _textEditor->checkVisibleCursor ();
-      //
-      //         lastTime = currentTime;
-      //       }
     }
   return 0;
 }

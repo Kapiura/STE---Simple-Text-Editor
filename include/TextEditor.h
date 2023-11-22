@@ -26,6 +26,8 @@ public:
   void renderCursor();
   void renderTextArea();
 
+  std::string getTextContent();
+
 private:
   SDL_Renderer *_renderer;
   SDL_Rect _textArea;

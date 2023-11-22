@@ -1,6 +1,7 @@
 #pragma once
 
 #include "EditorWindow.h"
+#include "SavingFile.h"
 #include "TextEditor.h"
 
 #ifndef APPLICATION_H
@@ -15,5 +16,6 @@ public:
 private:
   EditorWindow *_window;
   TextEditor *_textEditor;
+  // SavingWindow _saving_window;
 };
 #endif // APPLICATION_H

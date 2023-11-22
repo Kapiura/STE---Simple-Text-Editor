@@ -195,3 +195,22 @@ TextEditor::update ()
     }
   std::cout << "------------------------------------------------\n";
 }
+
+std::string
+TextEditor::getTextContent ()
+{
+  std::string result;
+  for (auto it = _textInput.begin (); it != _textInput.end (); ++it)
+    {
+      std::string temp = *it;
+      if (it != std::prev (_textInput.end ()))
+        {
+          result += *it + "\n";
+        }
+      else
+        {
+          result += *it;
+        }
+    }
+  return result;
+}

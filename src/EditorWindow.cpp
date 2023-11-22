@@ -87,3 +87,9 @@ EditorWindow::getRenderer () const
 {
   return _renderer;
 }
+
+SDL_Window *
+EditorWindow::getWindow () const
+{
+  return _window;
+}
