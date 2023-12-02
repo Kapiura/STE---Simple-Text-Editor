@@ -26,6 +26,15 @@ W trakcie projektowania będę dbał o ergonomiczność interfejsu, zapewniając
 ## Przykład działania prototypu
 ![](https://github.com/Kapiura/STE---Simple-Text-Editor/blob/main/Reademe_assets/2ndPrototype.gif)
 
+### Update 7
+TODO - saving
+TODO - copy
+TODO - visual
+TODO - paste
+TODO - cut
+- Dodanie komunikatu typu pop-up, pytającego użytkownika, czy na pewno chce opuścić program bez zapisywania. Jeśli odpowiedź jest pozytywna, program zamyka się poprawnie. W przypadku negatywnej odpowiedzi, program otwiera drugie okno w celu zapisu.
+- Naprawienie błędu związane z występowaniem białych znaków podczas pisania.
+
 ### Update 6
 
 - Usunięcie błędów związanych z poruszaniem się kursorem po linijkach oraz wyrazach.
