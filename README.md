@@ -11,17 +11,17 @@ W trakcie projektowania będę dbał o ergonomiczność interfejsu, zapewniając
 
 | Tydzień  | Opis                                                                             |
 | -------- | -------------------------------------------------------------------------------- |
-| 1        | Organizacja projektu na platformie GitHub oraz opracowanie planu projektu       |
-| 2-3      | Opracowanie wstępnego opisu aplikacji wraz z badaniem wybranych bibliotek i frameworków |
-| 4        | Implementacja podstawowych funkcji, takich jak pisanie, usuwanie, tworzenie nowych plików |
-| 5        | Rozwinięcie funkcjonalności o zapis, modyfikację i odczyt dokumentów            |
-| 6        | Wprowadzenie skrótów klawiszowych do kopiowania, wycinania i wklejania           |
-| 7-8      | Dodanie menu w górnej części interfejsu, zgodnego z konwencją edytorów tekstowych |
-| 9        | Implementacja możliwości zmiany czcionki w edytorze                              |
-| 10       | Dodanie opcji personalizacji interfejsu edytora                                 |
-| 11       | Przeprowadzenie poprawek estetycznych w interfejsie                              |
-| 12-13    | Rozwiązanie wszelakich błędów i poprawki jakościowe                             |
-| 14       | Przygotowanie i prezentacja końcowa projektu                                     |
+| 1 : [16.10.2023]-[22.10.2023]        | Organizacja projektu na platformie GitHub oraz opracowanie planu projektu       |
+| 2-3 : [23.10.2023]-[05.11.2023]      | Opracowanie wstępnego opisu aplikacji wraz z badaniem wybranych bibliotek i frameworków |
+| 4 : [06.11.2023]-[12.11.2023]        | Implementacja podstawowych funkcji, takich jak pisanie, usuwanie, tworzenie nowych plików |
+| 5 : [13.11.2023]-[19.11.2023]         | Rozwinięcie funkcjonalności o zapis, modyfikację i odczyt dokumentów            |
+| 6 : [20.11.2023]-[26.11.2023]        | Wprowadzenie skrótów klawiszowych do kopiowania, wycinania i wklejania           |
+| 7-8 : [27.11.2023]-[10.12.2023]       | Dodanie menu w górnej części interfejsu, zgodnego z konwencją edytorów tekstowych |
+| 9 : [11.12.2023]-[17.12.2023]         | Implementacja możliwości zmiany czcionki w edytorze                              |
+| 10 : [18.12.2023]-[24.12.2023]        | Dodanie opcji personalizacji interfejsu edytora                                 |
+| 11 : [25.12.2023]-[31.12.2023]       | Przeprowadzenie poprawek estetycznych w interfejsie                              |
+| 12-13 : [01.01.2024]-[14.01.2024]    | Rozwiązanie wszelakich błędów i poprawki jakościowe                             |
+| 14 : [15.01.2024]-[21.01.2024]       | Przygotowanie i prezentacja końcowa projektu                                     |
 
 ## Przykład działania prototypu
 ![](https://github.com/Kapiura/STE---Simple-Text-Editor/blob/main/Reademe_assets/2ndPrototype.gif)
