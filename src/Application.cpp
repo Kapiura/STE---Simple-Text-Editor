@@ -2,23 +2,45 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_messagebox.h>
+#include <SDL2/SDL_timer.h>
 #include <cstdlib>
 #include <iostream>
 
 Application::Application ()
 {
+  if (SDL_Init (SDL_INIT_VIDEO) < 0)
+    {
+      std::cout << "SDL error during init: " << SDL_GetError () << "\n";
+      exit (-1);
+    }
+  if (TTF_Init () < 0)
+    {
+      std::cerr << "SDL_ttf error during init: " << SDL_GetError () << "\n";
+      exit (-1);
+    }
+  _window = new EditorWindow ("STE", 600, 800);
+  _textEditor = new InputEditor (_window->getRenderer (), *_window);
+  // _savingWindow = NULL;
+  // _savingInput = NULL;
   std::cout << "Application object has been created\n";
-  _window = new EditorWindow ("STE - SimpleTextEditor", 600, 800);
-  _textEditor = new TextEditor (_window->getRenderer (), *_window);
 }
 
 Application::~Application ()
 {
   std::cout << "Application object has been destroyed\n";
-  delete _textEditor;
   delete _window;
+  delete _textEditor;
+  // if (_savingInput)
+  //   {
+  //     delete _savingInput;
+  //   }
+  // if (_savingWindow)
+  //   {
+  //     delete _savingWindow;
+  //   }
+  TTF_Quit ();
+  SDL_Quit ();
 }
-
 int
 Application::run ()
 {
@@ -27,6 +49,7 @@ Application::run ()
 
   while (!quit)
     {
+
       while (SDL_PollEvent (&event) != 0)
         {
 
@@ -34,23 +57,29 @@ Application::run ()
             {
               int btn;
               SDL_MessageBoxData messageboxdata;
-              messageboxdata.flags = SDL_MESSAGEBOX_INFORMATION;
+              messageboxdata.flags = SDL_MESSAGEBOX_WARNING;
               messageboxdata.window = _window->getWindow ();
-              messageboxdata.title = "Are you really wanna leave the program?";
+              messageboxdata.title = "Leaving unsaved file";
               messageboxdata.message
-                  = "Are you really want to quit without saving?";
-              SDL_MessageBoxButtonData buttons[] = {
-                { SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Yes" },
-                { SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "No" },
-              };
+                  = "Are you really want ot quit without saving?";
+              SDL_MessageBoxButtonData buttons[]
+                  = { { SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Yes" },
+                      { SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "No" } };
               messageboxdata.buttons = buttons;
               messageboxdata.numbuttons = SDL_arraysize (buttons);
-              if (SDL_ShowMessageBox (&messageboxdata, &btn) < 0)
+              SDL_MessageBoxColor messBackground = { 255, 255, 255 };
+              SDL_MessageBoxColor messText = { 0, 0, 0 };
+              SDL_MessageBoxColor messButtonBorder = { 250, 15, 150 };
+              SDL_MessageBoxColor messButtonBackground = { 255, 255, 255 };
+              SDL_MessageBoxColor messButtonSelected = { 150, 150, 25 };
+              SDL_MessageBoxColorScheme mescolt
+                  = { messBackground, messText, messButtonBorder,
+                      messButtonBackground, messButtonSelected };
+              messageboxdata.colorScheme = &mescolt;
+              if (SDL_ShowMessageBox (&messageboxdata, &btn) > 0)
                 {
-                  SDL_LogError (
-                      SDL_LOG_CATEGORY_APPLICATION,
-                      "Error displaying message box! SDL_Error: %s\n",
-                      SDL_GetError ());
+                  std::cerr << "Messagebox error " << SDL_GetError () << "\n";
+                  exit (-1);
                 }
               if (btn == 0)
                 {
@@ -58,24 +87,48 @@ Application::run ()
                 }
               else if (btn == 1)
                 {
-                  // _saving_window = new SavingWindow ();
-                  std::string textContent = _textEditor->getTextContent ();
-                  std::string filePathToSave = "~";
-                  std::string command = "xdg-open " + filePathToSave;
-                  if (system (command.c_str ()) == -1)
+                  // quit = true;
+                  _savingWindow = new EditorWindow ("Saving", 250, 400);
+                  _savingInput = new InputEditor (
+                      _savingWindow->getRenderer (), *_savingWindow);
+                  bool sQuit = false;
+                  SDL_Event sEvent;
+                  while (!sQuit)
                     {
-                      std::cerr << "Error opening file manager! Failed to "
-                                   "execute command."
-                                << std::endl;
+                      while (SDL_PollEvent (&sEvent) != 0)
+                        {
+                          if (sEvent.type == SDL_QUIT)
+                            {
+                              sQuit = true;
+                            }
+                          else if (sEvent.window.event == SDL_WINDOWEVENT_CLOSE
+                                   && sEvent.window.windowID
+                                          == SDL_GetWindowID (
+                                              _savingWindow->getWindow ()))
+                            {
+                              sQuit = true;
+                            }
+                          _savingInput->handleEvents (sEvent);
+                          _savingWindow->render ();
+                          _savingInput->render ();
+                        }
                     }
+                  if (_savingInput)
+                    {
+                      delete _savingInput;
+                    }
+                  if (_savingWindow)
+                    {
+                      delete _savingWindow;
+                    }
+                  // delete _savingInput;
+                  // delete _savingWindow;
                 }
             }
-
           _textEditor->handleEvents (event);
-          _window->update ();
-          _textEditor->update ();
-          _window->renderer ();
+          _window->render ();
           _textEditor->render ();
+          _textEditor->update ();
         }
     }
   return 0;
