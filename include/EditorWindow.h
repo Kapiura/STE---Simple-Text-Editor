@@ -10,18 +10,20 @@
 class EditorWindow {
 public:
   EditorWindow(std::string title, int height, int width);
+  EditorWindow(std::string t, int h, int w, TTF_Font *font);
   ~EditorWindow();
 
   SDL_Renderer *getRenderer() const;
   SDL_Window *getWindow() const;
+  TTF_Font *getFont() const;
 
   int getWindowHeight() const;
   int getWindowWidth() const;
 
-  void update();
-  void renderer();
+  // void update();
+  void render();
 
-protected:
+private:
   std::string _title;
   std::string _file_name;
   int _height;

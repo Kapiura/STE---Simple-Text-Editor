@@ -8,29 +8,15 @@
 #include <string>
 
 EditorWindow::EditorWindow (std::string title, int height, int width)
-    : _title (title), _file_name ("New_file"), _height (height), _width (width)
+    : _title (title), _file_name ("New_file.txt"), _height (height),
+      _width (width)
 {
-  // Simple text durign creating an object of EditorWindow class
   std::cout << "EditorWindow object has been created\n";
-  // Check if initializing SDL works
-  if (SDL_Init (SDL_INIT_VIDEO) < 0)
-    {
-      std::cout << "SDL error during init: " << SDL_GetError () << "\n";
-      exit (-1);
-    }
-  // Check if fonts initialize well
-  if (TTF_Init () < 0)
-    {
-      std::cout << "SDL_ttf error during init: " << SDL_GetError () << "\n";
-      exit (-1);
-    }
-  // Creating window and renderer
   std::string temp = _title + " - " + _file_name;
   _window = SDL_CreateWindow (temp.c_str (), SDL_WINDOWPOS_CENTERED,
                               SDL_WINDOWPOS_CENTERED, _width, _height,
                               SDL_WINDOW_RESIZABLE);
   _renderer = SDL_CreateRenderer (_window, -1, SDL_RENDERER_SOFTWARE);
-  // Check if renderer and window was created valid
   if (!_window)
     {
       std::cout << "SDL error while creating window: " << SDL_GetError ()
@@ -38,7 +24,7 @@ EditorWindow::EditorWindow (std::string title, int height, int width)
     }
   if (!_renderer)
     {
-      std::cout << "SDL error while creating renderer: " << SDL_GetError ()
+      std::cout << "SDL error while creating surface: " << SDL_GetError ()
                 << "\n";
     }
   SDL_SetWindowMinimumSize (_window, 150, 100);
@@ -48,22 +34,13 @@ EditorWindow::~EditorWindow ()
 {
   SDL_DestroyRenderer (_renderer);
   SDL_DestroyWindow (_window);
-  TTF_CloseFont (_font);
-  TTF_Quit ();
-  SDL_Quit ();
   std::cout << "EditorWindow object has been destroyed\n";
 }
 
 void
-EditorWindow::update ()
-{
-  // std::cout << "Update\n";
-}
-void
-EditorWindow::renderer ()
+EditorWindow::render ()
 {
   SDL_RenderClear (_renderer);
-  SDL_RenderPresent (_renderer);
 }
 
 int
@@ -92,4 +69,9 @@ SDL_Window *
 EditorWindow::getWindow () const
 {
   return _window;
+}
+TTF_Font *
+EditorWindow::getFont () const
+{
+  return _font;
 }
