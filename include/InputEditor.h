@@ -32,11 +32,18 @@ protected:
   void loadFont(const std::string &fontPath, int fontSize);
 
   SDL_Renderer *_renderer;
-  // SDL_Surface *_surface;
   SDL_Rect _textArea;
   TTF_Font *_font;
   EditorWindow _editorWindow;
   std::string *_fontPath;
+
+  void handleReturnKey();
+  void handleUpKey();
+  void handleDownKey();
+  void handleRightKey();
+  void handleLeftKey();
+  void handleBackspaceKey();
+  void handleCtrlV();
 
 private:
   std::vector<std::string> _textInput;

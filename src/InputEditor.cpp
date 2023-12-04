@@ -1,6 +1,7 @@
 #include "../include/InputEditor.h"
 #include "../include/EditorWindow.h"
 #include <SDL2/SDL_events.h>
+#include <SDL2/SDL_keyboard.h>
 #include <SDL2/SDL_keycode.h>
 #include <SDL2/SDL_rect.h>
 #include <SDL2/SDL_render.h>
@@ -51,33 +52,6 @@ InputEditor::loadFont (const std::string &fontPath, int fontSize)
     }
 }
 
-// void
-// InputEditor::renderCursor ()
-// {
-//   int textWidth, textHeight;
-//   if (_cursorVisible)
-//     {
-//
-//       SDL_Surface *indexSurface
-//           = TTF_RenderText_Solid (_font, "|", { 0, 0, 0, 0 });
-//       if (indexSurface == nullptr)
-//         {
-//           // Handle error (print error message or return)
-//           std::cerr << "TTF_RenderText_Solid - cursor error: "
-//                     << TTF_GetError () << std::endl;
-//           return;
-//         }
-//       SDL_Texture *indexTexture
-//           = SDL_CreateTextureFromSurface (_renderer, indexSurface);
-//       SDL_QueryTexture (indexTexture, NULL, NULL, &textWidth, &textHeight);
-//       SDL_Rect indexRect = { (cursonOnCurrentChar * 14) + 7,
-//                              cursorOnCurrentLine * 32, textWidth, textHeight
-//                              };
-//       SDL_RenderCopy (_renderer, indexTexture, NULL, &indexRect);
-//       SDL_DestroyTexture (indexTexture);
-//       SDL_FreeSurface (indexSurface);
-//     }
-// }
 void
 InputEditor::renderCursor ()
 {
@@ -105,15 +79,6 @@ InputEditor::renderTextArea ()
     {
       SDL_Surface *tempSurface = TTF_RenderText_Solid (
           _font, _textInput[i].c_str (), { 0, 0, 0, 0 });
-      // if (tempSurface == nullptr)
-      //   {
-      //     // Handle error (print error message or return)
-      //     std::cerr << "TTF_RenderText_Solid - renderTextArea error: "
-      //               << TTF_GetError () << std::endl;
-      //     return;
-      //   }
-      // SDL_Surface *tempSurface = TTF_RenderText_Solid (
-      // _font, _textInput[i].c_str (), { 0, 0, 0, 0 });
       SDL_Texture *tempTexture
           = SDL_CreateTextureFromSurface (_renderer, tempSurface);
       SDL_QueryTexture (tempTexture, NULL, NULL, &textWidth, &textHeight);
@@ -132,7 +97,6 @@ InputEditor::render ()
   this->renderTextArea ();
   this->renderCursor ();
   SDL_RenderPresent (_renderer);
-  // SDL_Delay (0);
 }
 
 void
@@ -143,82 +107,42 @@ InputEditor::handleEvents (SDL_Event &e)
       switch (e.key.keysym.sym)
         {
         case SDLK_RETURN:
-          cursorOnCurrentLine += 1;
-          cursonOnCurrentChar = -1;
-          _textInput.push_back ("");
+          handleReturnKey ();
           break;
         case SDLK_UP:
-          if (cursorOnCurrentLine > 0)
-            {
-              cursorOnCurrentLine -= 1;
-              if (cursonOnCurrentChar
-                  > static_cast<int> (_textInput[cursorOnCurrentLine].size ())
-                        - 1)
-                {
-                  cursonOnCurrentChar
-                      = static_cast<int> (
-                            _textInput[cursorOnCurrentLine].size ())
-                        - 1;
-                }
-            }
+          handleUpKey ();
           break;
         case SDLK_DOWN:
-          if (static_cast<int> (_textInput.size ()) - 1 > cursorOnCurrentLine)
-            {
-              cursorOnCurrentLine += 1;
-            }
-          if (cursonOnCurrentChar
-              > static_cast<int> (_textInput[cursorOnCurrentLine].size ()) - 1)
-            {
-              cursonOnCurrentChar
-                  = static_cast<int> (_textInput[cursorOnCurrentLine].size ())
-                    - 1;
-            }
+          handleDownKey ();
           break;
         case SDLK_RIGHT:
-          if (static_cast<int> (_textInput[cursorOnCurrentLine].size () - 1)
-              > cursonOnCurrentChar)
-            {
-              cursonOnCurrentChar += 1;
-            }
+          handleRightKey ();
           break;
         case SDLK_LEFT:
-          if (cursonOnCurrentChar >= 0)
-            {
-              cursonOnCurrentChar -= 1;
-            }
+          handleLeftKey ();
           break;
         case SDLK_BACKSPACE:
-          if (!_textInput[cursorOnCurrentLine].empty ())
-            {
-              if (cursonOnCurrentChar > -1)
-                {
-                  _textInput[cursorOnCurrentLine].erase (cursonOnCurrentChar,
-                                                         1);
-                  cursonOnCurrentChar -= 1;
-                }
-            }
-          else if (_textInput[cursorOnCurrentLine].empty ()
-                   && cursorOnCurrentLine > 0)
-            {
-              _textInput.erase (_textInput.begin () + cursorOnCurrentLine);
-              cursorOnCurrentLine -= 1;
-              cursonOnCurrentChar
-                  = static_cast<int> (_textInput[cursorOnCurrentLine].size ())
-                    - 1;
-            }
+          handleBackspaceKey ();
           break;
-        default:
-
-          if ((e.key.keysym.sym >= SDLK_SPACE && e.key.keysym.sym <= SDLK_z)
-              || (e.key.keysym.sym == SDLK_LSHIFT
-                  || e.key.keysym.sym == SDLK_RSHIFT))
+        case SDLK_v:
+          if (SDL_GetModState () & KMOD_CTRL)
+            {
+              handleCtrlV ();
+            }
+          else
             {
               char pressedChar = static_cast<char> (e.key.keysym.sym);
               _textInput[cursorOnCurrentLine] += pressedChar;
               cursonOnCurrentChar += 1;
             }
-
+          break;
+        default:
+          if ((e.key.keysym.sym >= SDLK_SPACE && e.key.keysym.sym <= SDLK_z))
+            {
+              char pressedChar = static_cast<char> (e.key.keysym.sym);
+              _textInput[cursorOnCurrentLine] += pressedChar;
+              cursonOnCurrentChar += 1;
+            }
           break;
         }
     }
@@ -256,4 +180,83 @@ InputEditor::getTextContent ()
         }
     }
   return result;
+}
+
+void
+InputEditor::handleReturnKey ()
+{
+  cursorOnCurrentLine += 1;
+  cursonOnCurrentChar = -1;
+  _textInput.push_back ("");
+}
+
+void
+InputEditor::handleUpKey ()
+{
+  if (cursorOnCurrentLine > 0)
+    {
+      cursorOnCurrentLine -= 1;
+    }
+}
+
+void
+InputEditor::handleDownKey ()
+{
+  if (cursorOnCurrentLine < static_cast<int> (_textInput.size ()) - 1)
+    {
+      cursorOnCurrentLine += 1;
+    }
+}
+
+void
+InputEditor::handleRightKey ()
+{
+  if (cursonOnCurrentChar
+      < static_cast<int> (_textInput[cursorOnCurrentLine].size ()) - 1)
+    {
+      cursonOnCurrentChar += 1;
+    }
+}
+
+void
+InputEditor::handleLeftKey ()
+{
+  if (cursonOnCurrentChar >= 0)
+    {
+      cursonOnCurrentChar -= 1;
+    }
+}
+
+void
+InputEditor::handleBackspaceKey ()
+{
+  if (!_textInput[cursorOnCurrentLine].empty ())
+    {
+      if (cursonOnCurrentChar > -1)
+        {
+          _textInput[cursorOnCurrentLine].erase (cursonOnCurrentChar, 1);
+          cursonOnCurrentChar -= 1;
+        }
+    }
+  else if (_textInput[cursorOnCurrentLine].empty () && cursorOnCurrentLine > 0)
+    {
+      _textInput.erase (_textInput.begin () + cursorOnCurrentLine);
+      cursorOnCurrentLine -= 1;
+      cursonOnCurrentChar
+          = static_cast<int> (_textInput[cursorOnCurrentLine].size () - 1);
+    }
+}
+
+void
+InputEditor::handleCtrlV ()
+{
+  const char *clipboardText = SDL_GetClipboardText ();
+  if (clipboardText != nullptr)
+    {
+      _textInput[cursorOnCurrentLine].insert (cursonOnCurrentChar + 1,
+                                              clipboardText);
+      cursonOnCurrentChar += strlen (clipboardText);
+      SDL_free (const_cast<char *> (clipboardText));
+    }
+  std::cout << "CTRL+V has been pressed\n";
 }

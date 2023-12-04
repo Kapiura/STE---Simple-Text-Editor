@@ -87,10 +87,11 @@ Application::run ()
                 }
               else if (btn == 1)
                 {
-                  // quit = true;
                   _savingWindow = new EditorWindow ("Saving", 250, 400);
-                  _savingInput = new InputEditor (
-                      _savingWindow->getRenderer (), *_savingWindow);
+                  // _savingInput = new InputEditor (
+                  //     _savingWindow->getRenderer (), *_savingWindow);
+                  _filemanager = new FileManager (_savingWindow);
+                  // _filemanager->listFiles ();
                   bool sQuit = false;
                   SDL_Event sEvent;
                   while (!sQuit)
@@ -108,27 +109,20 @@ Application::run ()
                             {
                               sQuit = true;
                             }
-                          _savingInput->handleEvents (sEvent);
+                          // _filemanager->updateFiles ();
                           _savingWindow->render ();
-                          _savingInput->render ();
+                          _filemanager->render ();
+                          // _filemanager->render ();
                         }
                     }
-                  if (_savingInput)
-                    {
-                      delete _savingInput;
-                    }
-                  if (_savingWindow)
-                    {
-                      delete _savingWindow;
-                    }
-                  // delete _savingInput;
-                  // delete _savingWindow;
+                  delete _filemanager;
+                  delete _savingWindow;
                 }
             }
           _textEditor->handleEvents (event);
           _window->render ();
           _textEditor->render ();
-          _textEditor->update ();
+          // _textEditor->update ();
         }
     }
   return 0;

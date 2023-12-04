@@ -1,6 +1,7 @@
 #pragma once
 
 #include "EditorWindow.h"
+#include "FileManager.h"
 #include "InputEditor.h"
 #include <SDL2/SDL_events.h>
 #include <memory>
@@ -21,6 +22,7 @@ private:
   InputEditor *_textEditor;
   EditorWindow *_savingWindow;
   InputEditor *_savingInput;
+  FileManager *_filemanager;
 
   // std::unique_ptr<EditorWindow> _window;
   // InputEditor *_textEditor;

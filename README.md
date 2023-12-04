@@ -30,10 +30,11 @@ W trakcie projektowania będę dbał o ergonomiczność interfejsu, zapewniając
 TODO - saving
 TODO - copy
 TODO - visual
-TODO - paste
 TODO - cut
+WORK IN PROGRESS - FileManager
 - Dodanie komunikatu typu pop-up, pytającego użytkownika, czy na pewno chce opuścić program bez zapisywania. Jeśli odpowiedź jest pozytywna, program zamyka się poprawnie. W przypadku negatywnej odpowiedzi, program otwiera drugie okno w celu zapisu.
 - Naprawienie błędu związane z występowaniem białych znaków podczas pisania.
+- Dodanie pod skrótem klawiszowym CTRL+V, dopisywanie do lini tekstu ze schowka.
 
 ### Update 6
 
