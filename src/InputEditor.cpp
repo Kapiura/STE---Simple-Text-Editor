@@ -7,8 +7,11 @@
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_video.h>
 #include <cstddef>
 #include <iostream>
+#include <string>
+#include <sys/types.h>
 
 InputEditor::InputEditor (SDL_Renderer *renderer,
                           const EditorWindow &editorWindow)
@@ -74,6 +77,8 @@ InputEditor::renderCursor ()
 void
 InputEditor::renderTextArea ()
 {
+
+  SDL_SetRenderDrawColor (_renderer, 255, 255, 255, 255);
   int textWidth, textHeight;
   for (size_t i = 0; i < _textInput.size (); ++i)
     {
@@ -93,9 +98,10 @@ InputEditor::renderTextArea ()
 void
 InputEditor::render ()
 {
-  SDL_SetRenderDrawColor (_renderer, 255, 255, 255, 255);
   this->renderTextArea ();
   this->renderCursor ();
+  this->renderBlankSpaces ();
+  this->lineNumber ();
   SDL_RenderPresent (_renderer);
 }
 
@@ -149,18 +155,48 @@ InputEditor::handleEvents (SDL_Event &e)
 }
 
 void
-InputEditor::update ()
+InputEditor::renderBlankSpaces ()
 {
+  int windowWidth, windowHeight;
+  SDL_GetWindowSize (_editorWindow.getWindow (), &windowWidth, &windowHeight);
 
-  std::cout << "------------------------------------------------\n";
-  std::cout << "cursor: " << cursonOnCurrentChar << "\n";
-  std::cout << "line: " << cursorOnCurrentLine << "\n";
-  for (auto &line : _textInput)
-    {
-      std::cout << "\"" << line << "\""
-                << "\n";
-    }
-  std::cout << "------------------------------------------------\n";
+  // SDL_Rect blankRect{ 0, windowHeight - 40, windowWidth, windowHeight };
+  SDL_Rect blankRect{ 0, windowHeight - 40, windowWidth, 40 };
+  SDL_SetRenderDrawColor (_renderer, 198, 206, 206, 255);
+  SDL_RenderDrawRect (_renderer, &blankRect);
+  SDL_RenderFillRect (_renderer, &blankRect);
+  SDL_SetRenderDrawColor (_renderer, 255, 255, 255, 255);
+}
+void
+InputEditor::lineNumber ()
+{
+  int windowWidth, windowHeight;
+  SDL_GetWindowSize (_editorWindow.getWindow (), &windowWidth, &windowHeight);
+  std::string tempLine = "Line : " + std::to_string (cursorOnCurrentLine + 1);
+  std::string tempCharNumber
+      = "Char : " + std::to_string (cursonOnCurrentChar + 1);
+  int textWidth, textHeight;
+
+  SDL_Surface *tempSurface
+      = TTF_RenderText_Solid (_font, tempLine.c_str (), { 0, 0, 0, 0 });
+  SDL_Texture *tempTexture
+      = SDL_CreateTextureFromSurface (_renderer, tempSurface);
+  SDL_QueryTexture (tempTexture, NULL, NULL, &textWidth, &textHeight);
+  SDL_Rect tempRect = { 15, windowHeight - 32, textWidth, textHeight };
+  SDL_RenderCopy (_renderer, tempTexture, NULL, &tempRect);
+  SDL_DestroyTexture (tempTexture);
+  SDL_FreeSurface (tempSurface);
+
+  SDL_Surface *tempSurface1
+      = TTF_RenderText_Solid (_font, tempCharNumber.c_str (), { 0, 0, 0, 0 });
+  SDL_Texture *tempTexture1
+      = SDL_CreateTextureFromSurface (_renderer, tempSurface1);
+  SDL_QueryTexture (tempTexture1, NULL, NULL, &textWidth, &textHeight);
+  SDL_Rect tempRect1 = { windowWidth - textWidth - 15, windowHeight - 32,
+                         textWidth, textHeight };
+  SDL_RenderCopy (_renderer, tempTexture1, NULL, &tempRect1);
+  SDL_DestroyTexture (tempTexture1);
+  SDL_FreeSurface (tempSurface1);
 }
 
 std::string
@@ -259,4 +295,11 @@ InputEditor::handleCtrlV ()
       SDL_free (const_cast<char *> (clipboardText));
     }
   std::cout << "CTRL+V has been pressed\n";
+}
+
+bool
+InputEditor::checkFileSaved (std::string fileName, std::string context)
+{
+  std::cout << "File name ; " << fileName << "\nContext : " << context << "\n";
+  return false;
 }

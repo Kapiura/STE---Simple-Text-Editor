@@ -22,6 +22,8 @@ public:
 
   std::string getTextContent();
 
+  bool checkFileSaved(std::string fileName, std::string context);
+
 protected:
   void renderCursor();
   void renderTextArea();
@@ -44,6 +46,9 @@ protected:
   void handleLeftKey();
   void handleBackspaceKey();
   void handleCtrlV();
+
+  void lineNumber();
+  void renderBlankSpaces();
 
 private:
   std::vector<std::string> _textInput;
