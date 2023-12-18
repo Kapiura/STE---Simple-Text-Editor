@@ -27,11 +27,7 @@ W trakcie projektowania będę dbał o ergonomiczność interfejsu, zapewniając
 ![](https://github.com/Kapiura/STE---Simple-Text-Editor/blob/main/Reademe_assets/2ndPrototype.gif)
 
 ### Update 7
-TODO - saving
-TODO - copy
-TODO - visual
-TODO - cut
-WORK IN PROGRESS - FileManager
+- Utworzenie prostego file managera, umożliwiający poruszanie sie po drzewku katalogu, wybieranie konretnych plikow
 - Dodanie komunikatu typu pop-up, pytającego użytkownika, czy na pewno chce opuścić program bez zapisywania. Jeśli odpowiedź jest pozytywna, program zamyka się poprawnie. W przypadku negatywnej odpowiedzi, program otwiera drugie okno w celu zapisu.
 - Naprawienie błędu związane z występowaniem białych znaków podczas pisania.
 - Dodanie pod skrótem klawiszowym CTRL+V, dopisywanie do lini tekstu ze schowka.
