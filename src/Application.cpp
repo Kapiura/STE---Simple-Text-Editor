@@ -20,8 +20,6 @@ Application::Application ()
     }
   _window = new EditorWindow ("STE", 600, 800);
   _textEditor = new InputEditor (_window->getRenderer (), *_window);
-  // _savingWindow = NULL;
-  // _savingInput = NULL;
   std::cout << "Application object has been created\n";
 }
 
@@ -30,14 +28,6 @@ Application::~Application ()
   std::cout << "Application object has been destroyed\n";
   delete _window;
   delete _textEditor;
-  // if (_savingInput)
-  //   {
-  //     delete _savingInput;
-  //   }
-  // if (_savingWindow)
-  //   {
-  //     delete _savingWindow;
-  //   }
   TTF_Quit ();
   SDL_Quit ();
 }
@@ -69,7 +59,7 @@ Application::run ()
               messageboxdata.numbuttons = SDL_arraysize (buttons);
               SDL_MessageBoxColor messBackground = { 255, 255, 255 };
               SDL_MessageBoxColor messText = { 0, 0, 0 };
-              SDL_MessageBoxColor messButtonBorder = { 250, 15, 150 };
+              SDL_MessageBoxColor messButtonBorder = { 0, 0, 0 };
               SDL_MessageBoxColor messButtonBackground = { 255, 255, 255 };
               SDL_MessageBoxColor messButtonSelected = { 150, 150, 25 };
               SDL_MessageBoxColorScheme mescolt
@@ -88,16 +78,16 @@ Application::run ()
               else if (btn == 1)
                 {
                   _savingWindow = new EditorWindow ("Saving", 250, 400);
-                  // _savingInput = new InputEditor (
-                  //     _savingWindow->getRenderer (), *_savingWindow);
-                  _filemanager = new FileManager (_savingWindow);
-                  // _filemanager->listFiles ();
+                  _filemanager = new FileManager (_savingWindow, _textEditor,
+                                                  _window->getPath ());
                   bool sQuit = false;
                   SDL_Event sEvent;
                   while (!sQuit)
                     {
                       while (SDL_PollEvent (&sEvent) != 0)
                         {
+                          _filemanager->handleEventMouse (sEvent, sQuit);
+                          _filemanager->handleEventKeyboard (sEvent, sQuit);
                           if (sEvent.type == SDL_QUIT)
                             {
                               sQuit = true;
@@ -121,8 +111,8 @@ Application::run ()
             }
           _textEditor->handleEvents (event);
           _window->render ();
-          _textEditor->render ();
           // _textEditor->update ();
+          _textEditor->render ();
         }
     }
   return 0;
