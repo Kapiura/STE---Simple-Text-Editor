@@ -1,7 +1,13 @@
 #pragma once
 #include "EditorWindow.h"
+#include "InputEditor.h"
+#include "SaveManager.h"
+#include <SDL2/SDL_config-x86_64.h>
+#include <SDL2/SDL_events.h>
+#include <SDL2/SDL_pixels.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_ttf.h>
+#include <array>
 #include <dirent.h>
 #include <filesystem>
 #include <iostream>
@@ -12,94 +18,69 @@
 
 class FileManager {
 public:
-  FileManager(EditorWindow *w) : _windowSaving(w) {
-    _path = std::filesystem::current_path();
-    fontSize = 11;
-    std::cout << "FileManager object has been created\n";
-    _renderer = _windowSaving->getRenderer();
-    loadFont("assets/jetbrainsmono/JetBrainsMono-Regular.ttf", fontSize);
-  }
-  ~FileManager() {
-    std::cout << "FileManager object has been deleted\n";
-    TTF_CloseFont(_font);
-  }
+  FileManager(EditorWindow *w, InputEditor *iw, std::filesystem::path path);
+  ~FileManager();
+  void loadFont(const std::string &fontPath, int fontSize);
+  void renderCurrentPath();
+  void renderFiles();
+  void render();
+  void renderNewFile();
 
-  void loadFont(const std::string &fontPath, int fontSize) {
-    _font = TTF_OpenFont(fontPath.c_str(), fontSize);
-    if (!_font) {
-      std::cout << "SDL TTF error loading font: " << SDL_GetError() << "\n";
-      exit(-1);
-    }
-  }
-  void renderCurrentPath() {
-    int textWidth, textHeight;
-    // std::cout << _path.string().c_str() << "\n";
-
-    SDL_Surface *tempSurface =
-        TTF_RenderText_Solid(_font, _path.string().c_str(), {0, 0, 0, 0});
-    SDL_Texture *tempTexture =
-        SDL_CreateTextureFromSurface(_renderer, tempSurface);
-    SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
-    SDL_Rect tempRect = {0, static_cast<int>(0 * 32), textWidth, textHeight};
-    SDL_RenderCopy(_renderer, tempTexture, NULL, &tempRect);
-    SDL_DestroyTexture(tempTexture);
-    SDL_FreeSurface(tempSurface);
-  }
-  void renderFiles() {
-    int textWidth, textHeight;
-    int i = 1;
-
-    for (const auto &entry : std::filesystem::directory_iterator(_path)) {
-      SDL_Color textColor;
-      if (std::filesystem::is_directory(entry)) {
-        textColor = {0, 0, 255, 255}; // Blue color for directories
-      } else {
-        textColor = {0, 0, 0, 255}; // Black color for regular files
-      }
-      std::string temp = entry.path().filename().string();
-      SDL_Surface *tempSurface =
-          TTF_RenderText_Solid(_font, temp.c_str(), textColor);
-      SDL_Texture *tempTexture =
-          SDL_CreateTextureFromSurface(_renderer, tempSurface);
-      SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
-      SDL_Rect tempRect = {0, static_cast<int>(i * 16), textWidth, textHeight};
-      SDL_RenderCopy(_renderer, tempTexture, NULL, &tempRect);
-      SDL_DestroyTexture(tempTexture);
-      SDL_FreeSurface(tempSurface);
-      ++i;
-    }
-  };
-  void render() {
-    SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
-    this->renderCurrentPath();
-    this->renderFiles();
-    SDL_RenderPresent(_renderer);
-  }
-  // void handleEvents(SDL_Event &e) {
-  //   // int mouseX, mouseY;
-  //   // // bool isMouseOverFile = false;
-  //   // if (e.type == SDL_MOUSEMOTION) {
-  //   //   // Update mouse coordinates
-  //   //   mouseX = e.motion.x;
-  //   //   mouseY = e.motion.y;
-  //
-  //     // SDL_Rect firstFileRect = {10, 10, 200, 20};
-  //     // isMouseOverFile = (mouseX >= firstFileRect.x &&
-  //     //                    mouseX <= (firstFileRect.x + firstFileRect.w) &&
-  //     //                    mouseY >= firstFileRect.y &&
-  //     //                    mouseY <= (firstFileRect.y + firstFileRect.h));
-  //   }
-  // }
+  std::filesystem::path getFilePath() const { return _path; }
+  std::string getFileNewName() const { return _file_name; }
 
 private:
   std::string _file_name;
   int fontSize;
   std::filesystem::path _path;
   EditorWindow *_windowSaving;
+  InputEditor *_savingInput;
   SDL_Renderer *_renderer;
   TTF_Font *_font;
   struct dirent *entry;
   DIR *dir;
+  std::vector<std::filesystem::path> pathHistory;
+  int currPath;
+  int startY;
+  int maxY;
+  int startMaxY;
+
+  int currentCursorPosition;
+
+  struct MyButton {
+    int btnX;
+    int btnY;
+    int btnW;
+    int btnH;
+    std::string name;
+    SDL_Color buttonColor;
+  };
+  std::vector<MyButton> btnGroup;
+  std::vector<std::string> btnNames;
+  std::vector<std::array<int, 2>> btnXY;
+  std::vector<std::array<int, 2>> btnWH;
+
+public:
+  void renderBlankSpaces();
+  void btnRender(MyButton butt);
+  bool IsMouseOver(int mouseX, int mouseY, MyButton btn) const;
+  void changeButtonColor(MyButton &btn, SDL_Color col);
+  void handleEventMouse(SDL_Event &e, bool &q);
+  void handleButtonClick(const MyButton &btn, bool &q);
+  void saveNewFile();
+  bool IsMouseOverFolderFile(const std::filesystem::directory_entry &entry,
+                             int index) const;
+  bool IsMouseOverFolder(int mouseX, int mouseY,
+                         const std::filesystem::directory_entry &entry) const;
+  std::string getFileName() const { return _file_name; }
+  void handleEventKeyboard(SDL_Event &e, bool &q);
+
+  void handleRight();
+  void handleLeft();
+  void handleBackspace();
+  void handleKeyboard();
+
+  void renderCursor();
 };
 
 #endif // !FILEMANAGER_H
