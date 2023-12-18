@@ -10,6 +10,7 @@
 #include <SDL2/SDL_video.h>
 #include <cstddef>
 #include <iostream>
+#include <memory>
 #include <string>
 #include <sys/types.h>
 
@@ -146,7 +147,9 @@ InputEditor::handleEvents (SDL_Event &e)
           if ((e.key.keysym.sym >= SDLK_SPACE && e.key.keysym.sym <= SDLK_z))
             {
               char pressedChar = static_cast<char> (e.key.keysym.sym);
-              _textInput[cursorOnCurrentLine] += pressedChar;
+              // _textInput[cursorOnCurrentLine] += pressedChar;
+              _textInput[cursorOnCurrentLine].insert (
+                  static_cast<int> (cursonOnCurrentChar) + 1, 1, pressedChar);
               cursonOnCurrentChar += 1;
             }
           break;
