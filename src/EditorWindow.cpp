@@ -8,9 +8,9 @@
 #include <string>
 
 EditorWindow::EditorWindow (std::string title, int height, int width)
-    : _title (title), _file_name ("New_file.txt"), _height (height),
-      _width (width)
+    : _title (title), _file_name ("unnamed"), _height (height), _width (width)
 {
+  _path = std::filesystem::current_path ();
   std::cout << "EditorWindow object has been created\n";
   std::string temp = _title + " - " + _file_name;
   _window = SDL_CreateWindow (temp.c_str (), SDL_WINDOWPOS_CENTERED,

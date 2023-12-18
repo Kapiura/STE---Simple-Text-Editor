@@ -1,11 +1,10 @@
 #pragma once
-
-#ifndef EDITORWINDOW_H
-#define EDITORWINDOW_H
-
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <filesystem>
 #include <string>
+#ifndef EDITORWINDOW_H
+#define EDITORWINDOW_H
 
 class EditorWindow {
 public:
@@ -20,8 +19,14 @@ public:
   int getWindowHeight() const;
   int getWindowWidth() const;
 
-  // void update();
+  std::string getNewFileName() const { return _file_name; }
+  void changeNewFileName(std::string newFileName) { _file_name = newFileName; }
+
+  void update();
   void render();
+
+  std::filesystem::path getPath() const { return _path; }
+  void setPath(std::filesystem::path p) { _path = p; }
 
 private:
   std::string _title;
@@ -31,6 +36,7 @@ private:
   SDL_Window *_window;
   SDL_Renderer *_renderer;
   TTF_Font *_font;
+  std::filesystem::path _path;
 };
 
 #endif // EDITORWINDOW_H
