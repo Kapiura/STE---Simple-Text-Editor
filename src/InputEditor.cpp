@@ -10,7 +10,6 @@
 #include <SDL2/SDL_video.h>
 #include <cstddef>
 #include <iostream>
-#include <memory>
 #include <string>
 #include <sys/types.h>
 
@@ -67,8 +66,9 @@ InputEditor::renderCursor ()
       SDL_Texture *indexTexture
           = SDL_CreateTextureFromSurface (_renderer, indexSurface);
       SDL_QueryTexture (indexTexture, NULL, NULL, &textWidth, &textHeight);
-      SDL_Rect indexRect = { (cursonOnCurrentChar * 14) + 7,
-                             cursorOnCurrentLine * 32, textWidth, textHeight };
+      SDL_Rect indexRect
+          = { (cursonOnCurrentChar * 14) + 7, (cursorOnCurrentLine + 1) * 32,
+              textWidth, textHeight };
       SDL_RenderCopy (_renderer, indexTexture, NULL, &indexRect);
       SDL_DestroyTexture (indexTexture);
       SDL_FreeSurface (indexSurface);
@@ -89,7 +89,7 @@ InputEditor::renderTextArea ()
           = SDL_CreateTextureFromSurface (_renderer, tempSurface);
       SDL_QueryTexture (tempTexture, NULL, NULL, &textWidth, &textHeight);
       SDL_Rect tempRect
-          = { 0, static_cast<int> (i * 32), textWidth, textHeight };
+          = { 0, static_cast<int> ((i + 1) * 32), textWidth, textHeight };
       SDL_RenderCopy (_renderer, tempTexture, NULL, &tempRect);
       SDL_DestroyTexture (tempTexture);
       SDL_FreeSurface (tempSurface);
@@ -143,11 +143,20 @@ InputEditor::handleEvents (SDL_Event &e)
               cursonOnCurrentChar += 1;
             }
           break;
+
         default:
           if ((e.key.keysym.sym >= SDLK_SPACE && e.key.keysym.sym <= SDLK_z))
             {
-              char pressedChar = static_cast<char> (e.key.keysym.sym);
-              // _textInput[cursorOnCurrentLine] += pressedChar;
+              char pressedChar;
+              if (SDL_GetModState () & KMOD_SHIFT)
+                {
+                  pressedChar
+                      = static_cast<char> (std::toupper (e.key.keysym.sym));
+                }
+              else
+                {
+                  pressedChar = static_cast<char> (e.key.keysym.sym);
+                }
               _textInput[cursorOnCurrentLine].insert (
                   static_cast<int> (cursonOnCurrentChar) + 1, 1, pressedChar);
               cursonOnCurrentChar += 1;
@@ -162,8 +171,6 @@ InputEditor::renderBlankSpaces ()
 {
   int windowWidth, windowHeight;
   SDL_GetWindowSize (_editorWindow.getWindow (), &windowWidth, &windowHeight);
-
-  // SDL_Rect blankRect{ 0, windowHeight - 40, windowWidth, windowHeight };
   SDL_Rect blankRect{ 0, windowHeight - 40, windowWidth, 40 };
   SDL_SetRenderDrawColor (_renderer, 198, 206, 206, 255);
   SDL_RenderDrawRect (_renderer, &blankRect);
@@ -305,4 +312,10 @@ InputEditor::checkFileSaved (std::string fileName, std::string context)
 {
   std::cout << "File name ; " << fileName << "\nContext : " << context << "\n";
   return false;
+}
+
+void
+InputEditor::setText (const std::vector<std::string> &text)
+{
+  _textInput = text;
 }

@@ -18,11 +18,17 @@ public:
   void update();
   void render();
 
-  void setText(const std::string &text);
+  void setText(const std::vector<std::string> &text);
 
   std::string getTextContent();
 
   bool checkFileSaved(std::string fileName, std::string context);
+
+  TTF_Font *getFont() { return _font; };
+  void setCursorDefaulr() {
+    cursonOnCurrentChar = -1;
+    cursorOnCurrentLine = 0;
+  };
 
 protected:
   void renderCursor();
