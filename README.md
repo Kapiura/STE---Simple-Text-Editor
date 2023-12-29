@@ -25,6 +25,28 @@ W trakcie projektowania będę dbał o ergonomiczność interfejsu, zapewniając
 
 ## Przykład działania prototypu
 ![](https://github.com/Kapiura/STE---Simple-Text-Editor/blob/main/Reademe_assets/2ndPrototype.gif)
+---
+
+### Update 9
+
+- **Szybki Zapis za Pomocą Paska Narzędzi:**
+  - Dodana funkcja szybkiego zapisu, umożliwiająca zapis aktualnie modyfikowanego pliku za pomocą paska narzędzi.
+
+- **Poprawienie Wyskakującego Okna Przy Zamykaniu Programu:**
+  - Usunięcie problemu z wyskakującym oknem przy zamykaniu programu, zapewniając płynne zakończenie działania aplikacji.
+
+- **Okienko z Creditsami:**
+  - Dodane wyskakujące okienko z informacjami o autorze i innych współtwórcach.
+
+- **Opcja Wklejania z Menubaru:**
+  - Dodana opcja wklejania tekstu za pomocą przycisku "Paste" w menubarze.
+
+- **Poprawa Nawigacji Kursorem za Pomocą Klawiatury:**
+  - Naprawa błędów związanych z nawigacją kursorem za pomocą klawiatury, zapewniając płynne i poprawne poruszanie się po tekście.
+  - Do naprawienia jeszcze kilka zwiazanych z poruszaniem sie prawo lewo po innych liniach niz dotychczasowa.
+---
+
+
 
 ### Update 8
 - **Pasek Nawigacyjny:**
@@ -58,6 +80,7 @@ W trakcie projektowania będę dbał o ergonomiczność interfejsu, zapewniając
 
 - **Poprawione Wstawianie Tekstu w Nazwę Pliku:**
   - Usprawniono proces wstawiania tekstu do nazwy pliku, eliminując błędy.
+---
 
 
 ### Update 7
@@ -65,6 +88,7 @@ W trakcie projektowania będę dbał o ergonomiczność interfejsu, zapewniając
 - Dodanie komunikatu typu pop-up, pytającego użytkownika, czy na pewno chce opuścić program bez zapisywania. Jeśli odpowiedź jest pozytywna, program zamyka się poprawnie. W przypadku negatywnej odpowiedzi, program otwiera drugie okno w celu zapisu.
 - Naprawienie błędu związane z występowaniem białych znaków podczas pisania.
 - Dodanie pod skrótem klawiszowym CTRL+V, dopisywanie do lini tekstu ze schowka.
+---
 
 ### Update 6
 
