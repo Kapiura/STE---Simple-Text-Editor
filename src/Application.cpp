@@ -48,7 +48,9 @@ Application::run ()
 
           if (event.type == SDL_QUIT)
             {
-              if (_textEditor->getTextContent () == "")
+              if (_textEditor->getTextContent ()
+                  == _window->getPath ().string () + "/"
+                         + _window->getFileName ())
                 {
                   quit = true;
                 }
@@ -56,33 +58,7 @@ Application::run ()
                 {
 
                   int btn;
-                  SDL_MessageBoxData messageboxdata;
-                  messageboxdata.flags = SDL_MESSAGEBOX_WARNING;
-                  messageboxdata.window = _window->getWindow ();
-                  messageboxdata.title = "Leaving unsaved file";
-                  messageboxdata.message
-                      = "Are you really want ot quit without saving?";
-                  SDL_MessageBoxButtonData buttons[] = {
-                    { SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Yes" },
-                    { SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "No" }
-                  };
-                  messageboxdata.buttons = buttons;
-                  messageboxdata.numbuttons = SDL_arraysize (buttons);
-                  SDL_MessageBoxColor messBackground = { 255, 255, 255 };
-                  SDL_MessageBoxColor messText = { 0, 0, 0 };
-                  SDL_MessageBoxColor messButtonBorder = { 0, 0, 0 };
-                  SDL_MessageBoxColor messButtonBackground = { 255, 255, 255 };
-                  SDL_MessageBoxColor messButtonSelected = { 150, 150, 25 };
-                  SDL_MessageBoxColorScheme mescolt
-                      = { messBackground, messText, messButtonBorder,
-                          messButtonBackground, messButtonSelected };
-                  messageboxdata.colorScheme = &mescolt;
-                  if (SDL_ShowMessageBox (&messageboxdata, &btn) > 0)
-                    {
-                      std::cerr << "Messagebox error " << SDL_GetError ()
-                                << "\n";
-                      exit (-1);
-                    }
+                  this->popUpWindow (btn);
                   if (btn == 0)
                     {
                       quit = true;
@@ -113,10 +89,8 @@ Application::run ()
                                 {
                                   sQuit = true;
                                 }
-                              // _filemanager->updateFiles ();
                               _savingWindow->render ();
                               _filemanager->render ();
-                              // _filemanager->render ();
                             }
                         }
                       delete _filemanager;
@@ -126,12 +100,39 @@ Application::run ()
             }
           _textEditor->handleEvents (event);
           _window->render ();
-          // _textEditor->update ();
-          //
           _menuBar->render ();
           _menuBar->handleEventMouse (event, quit);
           _textEditor->render ();
         }
     }
   return 0;
+}
+
+void
+Application::popUpWindow (int &btn)
+{
+  SDL_MessageBoxData messageboxdata;
+  messageboxdata.flags = SDL_MESSAGEBOX_WARNING;
+  messageboxdata.window = _window->getWindow ();
+  messageboxdata.title = "Leaving unsaved file";
+  messageboxdata.message = "Are you really want ot quit without saving?";
+  SDL_MessageBoxButtonData buttons[]
+      = { { SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Yes" },
+          { SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "No" } };
+  messageboxdata.buttons = buttons;
+  messageboxdata.numbuttons = SDL_arraysize (buttons);
+  SDL_MessageBoxColor messBackground = { 255, 255, 255 };
+  SDL_MessageBoxColor messText = { 0, 0, 0 };
+  SDL_MessageBoxColor messButtonBorder = { 0, 0, 0 };
+  SDL_MessageBoxColor messButtonBackground = { 255, 255, 255 };
+  SDL_MessageBoxColor messButtonSelected = { 150, 150, 25 };
+  SDL_MessageBoxColorScheme mescolt
+      = { messBackground, messText, messButtonBorder, messButtonBackground,
+          messButtonSelected };
+  messageboxdata.colorScheme = &mescolt;
+  if (SDL_ShowMessageBox (&messageboxdata, &btn) > 0)
+    {
+      std::cerr << "Messagebox error " << SDL_GetError () << "\n";
+      exit (-1);
+    }
 }

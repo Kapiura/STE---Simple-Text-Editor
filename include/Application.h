@@ -15,6 +15,7 @@ public:
   ~Application();
 
   int run();
+  void popUpWindow(int &btn);
 
 private:
   EditorWindow *_window;
