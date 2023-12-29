@@ -47,6 +47,8 @@ private:
 
   void PopBackWindow(int &btn, std::string title, std::string message,
                      std::string yes, std::string no);
+  void PopBackWindow(int &btn, std::string title, std::string message,
+                     std::string yes);
 
 public:
   bool isMouseOver(int mouseX, int mouseY, selectOption btn) const;

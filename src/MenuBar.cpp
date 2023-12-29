@@ -333,6 +333,10 @@ MenuBar::handleEventMouse (SDL_Event &e, bool &q)
             }
           if (isMouseOver (mouseX, mouseY, el) && el.name == "Save")
             {
+              SaveManager savingProc (_windowEditor->getFileName (),
+                                      _inputEditor->getTextContent (),
+                                      _windowEditor->getPath ());
+              savingProc.saveFile (_windowEditor->getWindow ());
             }
 
           if (isMouseOver (mouseX, mouseY, el) && el.name == "Save as")
@@ -376,20 +380,34 @@ MenuBar::handleEventMouse (SDL_Event &e, bool &q)
       // Check if any edit option is clicked
       for (auto &el : selEdit)
         {
-          if (isMouseOver (mouseX, mouseY, el))
+          if (isMouseOver (mouseX, mouseY, el) && el.name == "Undo")
             {
-              handleButtonClick (el);
-              break;
+              std::cout << "Undo\n";
+            }
+          if (isMouseOver (mouseX, mouseY, el) && el.name == "Paste")
+            {
+              _inputEditor->handleCtrlV ();
             }
         }
 
       // Check if any options option is clicked
       for (auto &el : selOptions)
         {
-          if (isMouseOver (mouseX, mouseY, el))
+          if (isMouseOver (mouseX, mouseY, el) && el.name == "Credits")
             {
-              handleButtonClick (el);
-              break;
+              int btn;
+              this->PopBackWindow (btn, "Credits",
+                                   "Text editor made by Kapiura\nAll is "
+                                   "written in C++ by using SDL library.",
+                                   "Ok");
+            }
+          if (isMouseOver (mouseX, mouseY, el) && el.name == "Customize")
+            {
+              int btn;
+              this->PopBackWindow (
+                  btn, "Customization window",
+                  "Here you will be able to customize font, colors etc.\n:)",
+                  "Soon");
             }
         }
     }
@@ -413,6 +431,34 @@ MenuBar::PopBackWindow (int &btn, std::string title, std::string message,
   SDL_MessageBoxButtonData buttons[]
       = { { SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, yes.c_str () },
           { SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, no.c_str () } };
+  messageboxdata.buttons = buttons;
+  messageboxdata.numbuttons = SDL_arraysize (buttons);
+  SDL_MessageBoxColor messBackground = { 255, 255, 255 };
+  SDL_MessageBoxColor messText = { 0, 0, 0 };
+  SDL_MessageBoxColor messButtonBorder = { 0, 0, 0 };
+  SDL_MessageBoxColor messButtonBackground = { 255, 255, 255 };
+  SDL_MessageBoxColor messButtonSelected = { 150, 150, 25 };
+  SDL_MessageBoxColorScheme mescolt
+      = { messBackground, messText, messButtonBorder, messButtonBackground,
+          messButtonSelected };
+  messageboxdata.colorScheme = &mescolt;
+  if (SDL_ShowMessageBox (&messageboxdata, &btn) > 0)
+    {
+      std::cerr << "Messagebox error " << SDL_GetError () << "\n";
+      exit (-1);
+    }
+}
+void
+MenuBar::PopBackWindow (int &btn, std::string title, std::string message,
+                        std::string yes)
+{
+  SDL_MessageBoxData messageboxdata;
+  messageboxdata.flags = SDL_MESSAGEBOX_WARNING;
+  messageboxdata.window = _windowEditor->getWindow ();
+  messageboxdata.title = title.c_str ();
+  messageboxdata.message = message.c_str ();
+  SDL_MessageBoxButtonData buttons[]
+      = { { SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, yes.c_str () } };
   messageboxdata.buttons = buttons;
   messageboxdata.numbuttons = SDL_arraysize (buttons);
   SDL_MessageBoxColor messBackground = { 255, 255, 255 };
