@@ -390,28 +390,7 @@ FileManager::handleEventKeyboard (SDL_Event &e, bool &q)
         }
     }
 }
-//
-// void
-// FileManager::handleRight ()
-// {
-//   currentCursorPosition += 1;
-//   std::cout << "=>\n";
-// }
-//
-// void
-// FileManager::handleLeft ()
-// {
-//   currentCursorPosition -= 1;
-//   std::cout << "<=\n";
-// }
-//
-// void
-// FileManager::handleBackspace ()
-// {
-//   _file_name.erase (currentCursorPosition, 1);
-//   std::cout << "backspace\n";
-// }
-//
+
 void
 FileManager::handleKeyboard ()
 {

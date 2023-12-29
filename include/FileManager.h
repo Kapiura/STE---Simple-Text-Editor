@@ -8,6 +8,7 @@
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_ttf.h>
 #include <array>
+#include <asm-generic/errno.h>
 #include <dirent.h>
 #include <filesystem>
 #include <iostream>
@@ -18,7 +19,10 @@
 
 class FileManager {
 public:
+  // saving
   FileManager(EditorWindow *w, InputEditor *iw, std::filesystem::path path);
+  // opening
+  // FileManager(EditorWindow *w, InputEditor *iw, std::filesystem::path path);
   ~FileManager();
   void loadFont(const std::string &fontPath, int fontSize);
   void renderCurrentPath();
