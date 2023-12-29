@@ -19,7 +19,7 @@ public:
   int getWindowHeight() const;
   int getWindowWidth() const;
 
-  std::string getNewFileName() const { return _file_name; }
+  std::string getFileName() const { return _file_name; }
   void changeNewFileName(std::string newFileName) { _file_name = newFileName; }
 
   void update();
