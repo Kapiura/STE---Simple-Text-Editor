@@ -29,6 +29,7 @@ public:
     cursonOnCurrentChar = -1;
     cursorOnCurrentLine = 0;
   };
+  void handleCtrlV();
 
 protected:
   void renderCursor();
@@ -51,7 +52,6 @@ protected:
   void handleRightKey();
   void handleLeftKey();
   void handleBackspaceKey();
-  void handleCtrlV();
 
   void lineNumber();
   void renderBlankSpaces();

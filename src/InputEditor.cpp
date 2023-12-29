@@ -243,6 +243,12 @@ InputEditor::handleUpKey ()
     {
       cursorOnCurrentLine -= 1;
     }
+  if (cursonOnCurrentChar
+      > static_cast<int> (_textInput[cursorOnCurrentLine].size ()) - 1)
+    {
+      cursonOnCurrentChar
+          = static_cast<int> (_textInput[cursorOnCurrentLine].size ()) - 1;
+    }
 }
 
 void
@@ -251,6 +257,12 @@ InputEditor::handleDownKey ()
   if (cursorOnCurrentLine < static_cast<int> (_textInput.size ()) - 1)
     {
       cursorOnCurrentLine += 1;
+    }
+  if (cursonOnCurrentChar
+      > static_cast<int> (_textInput[cursorOnCurrentLine].size ()) - 1)
+    {
+      cursonOnCurrentChar
+          = static_cast<int> (_textInput[cursorOnCurrentLine].size ()) - 1;
     }
 }
 
@@ -262,6 +274,12 @@ InputEditor::handleRightKey ()
     {
       cursonOnCurrentChar += 1;
     }
+  else if (cursonOnCurrentChar
+           == static_cast<int> (_textInput[cursorOnCurrentLine].size ()) - 1)
+    {
+      cursorOnCurrentLine += 1;
+      cursonOnCurrentChar = -1;
+    }
 }
 
 void
@@ -270,6 +288,12 @@ InputEditor::handleLeftKey ()
   if (cursonOnCurrentChar >= 0)
     {
       cursonOnCurrentChar -= 1;
+    }
+  if (cursonOnCurrentChar + 1 == 0 && cursorOnCurrentLine > 0)
+    {
+      cursorOnCurrentLine -= 1;
+      cursonOnCurrentChar
+          = static_cast<int> (_textInput[cursorOnCurrentLine].size ()) - 1;
     }
 }
 
