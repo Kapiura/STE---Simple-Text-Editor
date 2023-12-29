@@ -3,6 +3,7 @@
 #include "EditorWindow.h"
 #include "FileManager.h"
 #include "InputEditor.h"
+#include "MenuBar.h"
 #include <SDL2/SDL_events.h>
 #include <memory>
 
@@ -19,6 +20,7 @@ private:
   EditorWindow *_window;
   InputEditor *_textEditor;
   EditorWindow *_savingWindow;
+  MenuBar *_menuBar;
   InputEditor *_savingInput;
   FileManager *_filemanager;
 };
