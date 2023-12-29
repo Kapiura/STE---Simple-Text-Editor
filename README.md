@@ -26,6 +26,40 @@ W trakcie projektowania będę dbał o ergonomiczność interfejsu, zapewniając
 ## Przykład działania prototypu
 ![](https://github.com/Kapiura/STE---Simple-Text-Editor/blob/main/Reademe_assets/2ndPrototype.gif)
 
+### Update 8
+- **Pasek Nawigacyjny:**
+  - Dodany pasek ułatwiający obsługę plików.
+  - Nowe funkcje obejmują: 
+    - Utwórz nowy plik
+    - Otwórz istniejący plik
+    - Zapisz plik
+    - Zapisz plik jako
+    - Zamknij aplikację
+    - Cofnij (undo) i Wklej (paste) w obszarze edytora
+    - Dostęp do opcji dostosowywania (customization) oraz informacji o autorze (credits)
+
+- **Poprawione Wstawianie Tekstu:**
+  - Zoptymalizowano proces wstawiania tekstu dla lepszej wydajności i precyzji.
+
+- **Obsługa Paska Narzędzi:**
+  - Dodana obsługa paska narzędzi umożliwiającego szybki dostęp do różnych funkcji aplikacji.
+
+- **Przyciski File, Edit, Options:**
+  - Każda z zakładek zawiera teraz działające opcje:
+    - File: Nowy plik, Zapisz jako, Zamknij
+    - Edit: Cofnij, Wklej
+    - Options: Dostosowanie aplikacji, Informacje o autorze
+
+- **Licznik Linii i Pozycja Kursora:**
+  - Dodany licznik linii, aby łatwo śledzić aktualną pozycję w pliku.
+
+- **Poruszanie się po Drzewku Systemu:**
+  - Dodana możliwość poruszania się po strukturze drzewa systemu dla wygodniejszej nawigacji.
+
+- **Poprawione Wstawianie Tekstu w Nazwę Pliku:**
+  - Usprawniono proces wstawiania tekstu do nazwy pliku, eliminując błędy.
+
+
 ### Update 7
 - Utworzenie prostego file managera, umożliwiający poruszanie sie po drzewku katalogu, wybieranie konretnych plikow
 - Dodanie komunikatu typu pop-up, pytającego użytkownika, czy na pewno chce opuścić program bez zapisywania. Jeśli odpowiedź jest pozytywna, program zamyka się poprawnie. W przypadku negatywnej odpowiedzi, program otwiera drugie okno w celu zapisu.
