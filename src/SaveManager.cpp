@@ -84,3 +84,26 @@ SaveManager::saveFile (bool &q, SDL_Window *w)
       this->PopUp (w, title, mess);
     }
 }
+
+void
+SaveManager::saveFile (SDL_Window *w)
+{
+  if (this->isFileExist ())
+    {
+      std::ofstream savingFile{ _file_name };
+      savingFile << _content;
+      savingFile.close ();
+      std::cout << "New file " << _file_name << " has been created in "
+                << _new_file_path << "\n";
+      std::string title = "Saving";
+      std::string mess = "File has been saved succesfully";
+      this->PopUp (w, title, mess);
+    }
+  else
+    {
+      std::cout << "File has already existed\n";
+      std::string title = "Saving";
+      std::string mess = "File has been already existing!";
+      this->PopUp (w, title, mess);
+    }
+}
