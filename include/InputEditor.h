@@ -18,7 +18,7 @@ public:
   void update();
   void render();
 
-  void setText(const std::vector<std::string> &text);
+  void setText(std::vector<std::string> &text);
 
   std::string getTextContent();
 

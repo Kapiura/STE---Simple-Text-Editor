@@ -14,7 +14,7 @@ FileManager::FileManager (EditorWindow *w, InputEditor *iw,
 
 {
   fontSize = 11;
-  std::cout << "FileManager object has been created\n";
+  std::cout << "FileManager-Saving object has been created\n";
   _renderer = _windowSaving->getRenderer ();
   loadFont ("assets/jetbrainsmono/JetBrainsMono-Regular.ttf", fontSize);
   int wD, wH;
@@ -49,6 +49,48 @@ FileManager::FileManager (EditorWindow *w, InputEditor *iw,
                             { 255, 255, 255, 255 } });
     }
 }
+FileManager::FileManager (EditorWindow *w, InputEditor *iw,
+                          std::filesystem::path path, std::string open)
+    : _path (path), _windowSaving (w), _editorInput (iw),
+      currentCursorPosition (static_cast<int> (_file_name.size ()) - 1)
+{
+  fontSize = 11;
+  std::cout << "FileManager-Opening object has been created\n";
+  _renderer = _windowSaving->getRenderer ();
+  loadFont ("assets/jetbrainsmono/JetBrainsMono-Regular.ttf", fontSize);
+  int wD, wH;
+  SDL_GetWindowSize (_windowSaving->getWindow (), &wD, &wH);
+  currPath = 0;
+  startY = 10;
+  pathHistory.push_back (_path);
+  // Next button
+  btnXY.push_back ({ wD - 45, 5 });
+  btnWH.push_back ({ 35, 15 });
+  btnNames.push_back (">");
+  // Prev button
+  btnXY.push_back ({ wD - 85, 5 });
+  btnWH.push_back ({ 35, 15 });
+  btnNames.push_back ("<");
+  // Close button
+  btnXY.push_back ({ 10, wH - 35 });
+  btnWH.push_back ({ 70, 25 });
+  btnNames.push_back ("Close");
+  // Save button
+  btnXY.push_back ({ wD - 85, wH - 35 });
+  btnWH.push_back ({ 70, 25 });
+  btnNames.push_back (open);
+
+  for (int i = 0; i < 4; ++i)
+    {
+      btnGroup.push_back ({ btnXY[i][0],
+                            btnXY[i][1],
+                            btnWH[i][0],
+                            btnWH[i][1],
+                            btnNames[i],
+                            { 255, 255, 255, 255 } });
+    }
+}
+
 FileManager::~FileManager ()
 {
   std::cout << "FileManager object has been deleted\n";
@@ -148,6 +190,22 @@ FileManager::render ()
   SDL_RenderPresent (_renderer);
   std::cout << "Current Cursor Pos = " << currentCursorPosition << "\n";
 }
+
+void
+FileManager::renderOpen ()
+{
+  this->renderFiles ();
+  this->renderBlankSpaces ();
+  this->renderCurrentPath ();
+  for (int i = 0; i < 4; ++i)
+    {
+      this->btnRender (btnGroup[i]);
+    }
+  this->renderNewFile ();
+  SDL_SetRenderDrawColor (_renderer, 255, 255, 255, 255);
+  SDL_RenderPresent (_renderer);
+}
+
 void
 FileManager::renderNewFile ()
 {
@@ -385,17 +443,30 @@ FileManager::handleEventKeyboard (SDL_Event &e, bool &q)
           break;
           // defualt
         default:
-          handleKeyboard ();
+          handleKeyboard (e);
           break;
         }
     }
 }
 
 void
-FileManager::handleKeyboard ()
+FileManager::handleKeyboard (SDL_Event &e)
 {
-  _file_name.append (currentCursorPosition, 1);
-  std::cout << "Key\n";
+  if ((e.key.keysym.sym >= SDLK_SPACE && e.key.keysym.sym <= SDLK_z))
+    {
+      char pressedChar;
+      if (SDL_GetModState () & KMOD_SHIFT)
+        {
+          pressedChar = static_cast<char> (std::toupper (e.key.keysym.sym));
+        }
+      else
+        {
+          pressedChar = static_cast<char> (e.key.keysym.sym);
+        }
+      _file_name.insert (static_cast<int> (currentCursorPosition) + 1, 1,
+                         pressedChar);
+      currentCursorPosition += 1;
+    }
 }
 
 void
@@ -450,5 +521,122 @@ FileManager::handleBackspace ()
       _file_name.erase (_file_name.begin () + currentCursorPosition);
       currentCursorPosition -= 1;
       currentCursorPosition = static_cast<int> (_file_name.size () - 1);
+    }
+}
+
+void
+FileManager::handleEventMouseOpen (SDL_Event &e, bool &q)
+{
+  if (e.type == SDL_MOUSEMOTION)
+    {
+      int mouseX = e.motion.x;
+      int mouseY = e.motion.y;
+
+      for (int i = 0; i < 4; ++i)
+        {
+
+          if (IsMouseOver (mouseX, mouseY, btnGroup[i]))
+            {
+              changeButtonColor (btnGroup[i], { 255, 255, 0, 255 });
+            }
+          else
+            {
+
+              changeButtonColor (btnGroup[i], { 255, 255, 255, 255 });
+            }
+        }
+    }
+  else if (e.type == SDL_MOUSEBUTTONDOWN)
+    {
+      int mouseX = e.button.x;
+      int mouseY = e.button.y;
+
+      for (int i = 0; i < 4; ++i)
+        {
+          if (IsMouseOver (mouseX, mouseY, btnGroup[i]))
+            {
+              handleButtonClickOpen (btnGroup[i], q);
+            }
+        }
+      int i = 1;
+      for (const auto &entry : std::filesystem::directory_iterator (_path))
+        {
+          if (IsMouseOverFolderFile (entry, i))
+            {
+              if (std::filesystem::is_directory (entry))
+                {
+                  std::string tempPath = _path.string ();
+                  std::string tempEntry = entry.path ().filename ().string ();
+                  tempPath = tempPath + "/" + tempEntry;
+                  _path = tempPath;
+                  startY = 10;
+                  break;
+                }
+              else
+                {
+                  {
+                    _file_name = entry.path ().filename ();
+                    break;
+                  }
+                }
+            }
+          ++i;
+        }
+    }
+
+  else if (e.type == SDL_MOUSEWHEEL)
+    {
+      int count = std::distance (std::filesystem::directory_iterator (_path),
+                                 std::filesystem::directory_iterator{});
+      int scrollY = e.wheel.y;
+
+      if (scrollY < 0 && startY < 10)
+        {
+          std::cout << "Scroll down" << std::endl;
+          startY += 17;
+        }
+      else if (scrollY > 0 && count > 11 && 10 - (count - 11) * 17 < startY)
+        {
+          std::cout << "Scroll Up" << std::endl;
+          startY -= 17;
+        }
+      std::cout << "StartY = " << startY << "\n";
+      std::cout << "Count = " << count << "\n";
+    }
+}
+void
+FileManager::handleButtonClickOpen (const MyButton &btn, bool &q)
+{
+  // next
+  if (btn.name == ">")
+    {
+      if (currPath > 0)
+        {
+          currPath -= 1;
+          startY = 10;
+        }
+      _path = pathHistory[currPath];
+    }
+  else if (btn.name == "<")
+    // prev
+    {
+      std::filesystem::path temppatj = _path;
+      _path = _path.parent_path ();
+      if (_path != temppatj)
+        {
+          pathHistory.push_back (_path);
+          currPath += 1;
+          startY = 10;
+        }
+    }
+  else if (btn.name == "Close")
+    {
+      q = true;
+    }
+  else if (btn.name == "Open")
+    {
+      SaveManager savingProc (_file_name, _path);
+      savingProc.openFile (_windowSaving->getWindow (), _editorInput);
+      _windowSaving->changeNewFileName (_file_name);
     }
 }

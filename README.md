@@ -27,6 +27,19 @@ W trakcie projektowania będę dbał o ergonomiczność interfejsu, zapewniając
 ![](https://github.com/Kapiura/STE---Simple-Text-Editor/blob/main/Reademe_assets/2ndPrototype.gif)
 ---
 
+
+### Update 10
+
+- **Naprawienie Wpisywania Nazwy Pliku w Oknie Zapisu:**
+  - Poprawiono problem z wpisywaniem nazwy pliku w oknie zapisu, aby umożliwić bezproblemowe zapisywanie.
+
+- **Otwieranie i Ładowanie Plików:**
+  - Dodano funkcję otwierania plików oraz ładowania ich zawartości do aplikacji.
+
+- **Modyfikacja Plików i Zapis:**
+  - Teraz możliwe jest modyfikowanie plików w aplikacji i zapisywanie wprowadzonych zmian.
+---
+
 ### Update 9
 
 - **Szybki Zapis za Pomocą Paska Narzędzi:**

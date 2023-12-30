@@ -339,7 +339,7 @@ InputEditor::checkFileSaved (std::string fileName, std::string context)
 }
 
 void
-InputEditor::setText (const std::vector<std::string> &text)
+InputEditor::setText (std::vector<std::string> &text)
 {
   _textInput = text;
 }

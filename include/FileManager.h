@@ -22,7 +22,8 @@ public:
   // saving
   FileManager(EditorWindow *w, InputEditor *iw, std::filesystem::path path);
   // opening
-  // FileManager(EditorWindow *w, InputEditor *iw, std::filesystem::path path);
+  FileManager(EditorWindow *w, InputEditor *iw, std::filesystem::path path,
+              std::string open);
   ~FileManager();
   void loadFont(const std::string &fontPath, int fontSize);
   void renderCurrentPath();
@@ -38,6 +39,7 @@ private:
   int fontSize;
   std::filesystem::path _path;
   EditorWindow *_windowSaving;
+  InputEditor *_editorInput;
   InputEditor *_savingInput;
   SDL_Renderer *_renderer;
   TTF_Font *_font;
@@ -82,9 +84,12 @@ public:
   void handleRight();
   void handleLeft();
   void handleBackspace();
-  void handleKeyboard();
+  void handleKeyboard(SDL_Event &e);
 
   void renderCursor();
+  void renderOpen();
+  void handleButtonClickOpen(const MyButton &btn, bool &q);
+  void handleEventMouseOpen(SDL_Event &e, bool &q);
 };
 
 #endif // !FILEMANAGER_H

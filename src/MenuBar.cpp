@@ -331,6 +331,37 @@ MenuBar::handleEventMouse (SDL_Event &e, bool &q)
                   _inputEditor->setCursorDefaulr ();
                 }
             }
+          if (isMouseOver (mouseX, mouseY, el) && el.name == "Open")
+            {
+              _savingWindow = new EditorWindow ("Opening", 250, 400);
+              _filemanager
+                  = new FileManager (_savingWindow, _inputEditor,
+                                     _windowEditor->getPath (), "Open");
+              bool sQuit = false;
+              SDL_Event sEvent;
+              while (!sQuit)
+                {
+                  while (SDL_PollEvent (&sEvent) != 0)
+                    {
+                      _filemanager->handleEventMouseOpen (sEvent, sQuit);
+                      if (sEvent.type == SDL_QUIT)
+                        {
+                          sQuit = true;
+                        }
+                      else if (sEvent.window.event == SDL_WINDOWEVENT_CLOSE
+                               && sEvent.window.windowID
+                                      == SDL_GetWindowID (
+                                          _savingWindow->getWindow ()))
+                        {
+                          sQuit = true;
+                        }
+                      _savingWindow->render ();
+                      _filemanager->renderOpen ();
+                    }
+                }
+              delete _filemanager;
+              delete _savingWindow;
+            }
           if (isMouseOver (mouseX, mouseY, el) && el.name == "Save")
             {
               SaveManager savingProc (_windowEditor->getFileName (),

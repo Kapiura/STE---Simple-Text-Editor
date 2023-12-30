@@ -9,12 +9,49 @@ SaveManager::SaveManager (std::string fileName, std::string content,
                           std::filesystem::path path)
     : _file_name (fileName), _content (content), _new_file_path (path)
 {
-  std::cout << "SaveManager object has been created\n";
+  std::cout << "SaveManager-SAVING object has been created\n";
 }
-
+SaveManager::SaveManager (std::string fileName, std::filesystem::path path)
+    : _file_name (fileName), _new_file_path (path)
+{
+  std::cout << "SaveManager-OPEN object has been created\n";
+}
 SaveManager::~SaveManager ()
 {
   std::cout << "SaveManager object has been destroyed\n";
+}
+
+void
+SaveManager::openFile (SDL_Window *w, InputEditor *ie)
+{
+  // Utwórz obiekt ifstream do odczytu pliku
+  std::ifstream file (_file_name);
+
+  // Sprawdź, czy plik został poprawnie otwarty
+  if (!file.is_open ())
+    {
+      std::cerr << "File doesnt exist\n" << std::endl;
+      std::string title = "Opening";
+      std::string mess = "File doesn't exist!";
+      this->PopUp (w, title, mess);
+    }
+  else
+    {
+      // Odczytaj plik linia po linii
+      std::string line;
+      while (std::getline (file, line))
+        {
+          std::cout << line << std::endl;
+          _contentVector.push_back (line);
+        }
+      ie->setText (_contentVector);
+      file.close ();
+      std::cout << _file_name << " has been opened\n";
+      std::string title = "Opening";
+      std::string mess = "File has been opened succesfully";
+      this->PopUp (w, title, mess);
+    }
+  file.close ();
 }
 
 bool
