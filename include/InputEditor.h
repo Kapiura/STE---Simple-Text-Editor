@@ -1,3 +1,4 @@
+#pragma once
 #include "EditorWindow.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_events.h>
@@ -5,7 +6,6 @@
 #include <SDL2/SDL_ttf.h>
 #include <string>
 #include <vector>
-#pragma once
 #ifndef TEXTEDITOR_H
 #define TEXTEDITOR_H
 
@@ -30,6 +30,8 @@ public:
     cursorOnCurrentLine = 0;
   };
   void handleCtrlV();
+  void handleCtrlZ();
+  void handleEventMouse(SDL_Event &e);
 
 protected:
   void renderCursor();
@@ -61,7 +63,7 @@ private:
   int fontSize;
   int cursorOnCurrentLine;
   int cursonOnCurrentChar;
-
+  int startY;
   bool _cursorVisible;
 };
 
