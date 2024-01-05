@@ -18,7 +18,7 @@ public:
   bool isFileExist() const;
   void saveFile(bool &q, SDL_Window *w);
   void saveFile(SDL_Window *w);
-  void openFile(SDL_Window *w, InputEditor *ie);
+  void openFile(bool &q, SDL_Window *w, InputEditor *ie);
   void PopUp(SDL_Window *w, std::string title, std::string mess);
 
 private:

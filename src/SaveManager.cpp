@@ -22,7 +22,7 @@ SaveManager::~SaveManager ()
 }
 
 void
-SaveManager::openFile (SDL_Window *w, InputEditor *ie)
+SaveManager::openFile (bool &q, SDL_Window *w, InputEditor *ie)
 {
   // Utwórz obiekt ifstream do odczytu pliku
   std::ifstream file (_file_name);
@@ -50,6 +50,7 @@ SaveManager::openFile (SDL_Window *w, InputEditor *ie)
       std::string title = "Opening";
       std::string mess = "File has been opened succesfully";
       this->PopUp (w, title, mess);
+      q = true;
     }
   file.close ();
 }
