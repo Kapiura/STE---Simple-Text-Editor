@@ -28,6 +28,38 @@ W trakcie projektowania będę dbał o ergonomiczność interfejsu, zapewniając
 ---
 
 
+### Update 11
+
+**Naprawienia i Ulepszenia:**
+
+- **Naprawiony Błąd z Poruszaniem Się Strzałkami:**
+  - Usunięto problem z poruszaniem się między linijkami za pomocą strzałek, zapewniając płynne nawigowanie.
+
+- **Ulepszenie Funkcji Przycisku Backspace:**
+  - Teraz kliknięcie przycisku Backspace na początku linii usuwa nową linię i dołącza ją do poprzedniej, zgodnie z większością edytorów tekstu.
+
+- **Poprawienie Wyświetlania Menubara:**
+  - Zoptymalizowano wyświetlanie menubara dla lepszej czytelności i estetyki.
+
+- **Funkcje Menubara:**
+  - Dodano działające funkcje menubara, takie jak:
+    - Utworzenie nowego pliku
+    - Otwarcie pliku
+    - Szybkie zapisanie aktualnego pliku
+    - Zapisanie pliku jako o danej nazwie
+    - Zamknięcie aplikacji
+    - Wklejanie
+    - Cofnięcie ostatniego ruchu (jeszcze nie działa, ale przycisk jest gotowy do użycia)
+    - Opcje (jeszcze nie działają, ale przycisk jest gotowy do użycia)
+    - Creditsy
+
+- **Poprawienie Zapisywania i Otwierania Plików:**
+  - Zmniejszono błąd związany z zapisywaniem i otwieraniem plików.
+
+- **Błąd z Dużymi Plikami:**
+  - Zidentyfikowano problem z obsługą dużych plików (około 40 kB), który powoduje trudności dla komputera.
+---
+
 ### Update 10
 
 - **Naprawienie Wpisywania Nazwy Pliku w Oknie Zapisu:**
