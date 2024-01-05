@@ -25,6 +25,10 @@ private:
   SDL_Renderer *_renderer;
   TTF_Font *_font;
 
+  InputEditor *_savingInput;
+  FileManager *_filemanager;
+  EditorWindow *_savingWindow;
+
   struct selectOption {
     std::string name;
     int x;
@@ -32,6 +36,8 @@ private:
     int w;
     int h;
     SDL_Color clr;
+    bool visible;
+    SDL_Rect rect;
   };
   std::vector<selectOption> selOps;
   std::vector<selectOption> selFile;
@@ -41,10 +47,9 @@ private:
   int maxY;
   int startMaxY;
 
-  InputEditor *_savingInput;
-  FileManager *_filemanager;
-  EditorWindow *_savingWindow;
-
+  bool fileOps = false;
+  bool editOps = false;
+  bool opsOps = false;
   void PopBackWindow(int &btn, std::string title, std::string message,
                      std::string yes, std::string no);
   void PopBackWindow(int &btn, std::string title, std::string message,
@@ -57,6 +62,7 @@ public:
   void handleButtonClick(const selectOption &btn);
   void renderOpsOption(std::vector<selectOption> &vecOps);
   void handleCloseClickInFile(bool &q, selectOption &el);
+  void handleMouseMotion(SDL_Event &e);
 };
 
 #endif // MENUBAR_H
