@@ -1,11 +1,9 @@
 # STE - Simple Text Editor
 ##### Kacper Wiszniewski - II rok ISSP - Projekt C++ 2024 - semestr zimowy
 
-Projektuje prosty edytor tekstu, który będzie cechował się przejrzystym i eleganckim interfejsem graficznym. Główne funkcjonalności obejmują tworzenie nowych plików, zapisywanie, odczytywanie, modyfikowanie istniejących dokumentów, a także standardowe operacje edycji, takie jak wycinanie, kopiowanie, i wklejanie. Dodatkowo, planuję zaimplementować funkcje wyszukiwania słów i fraz, zmiany czcionki oraz dostosowywania kolorów tła i tekstu.
+Planuję stworzyć prosty, ale wszechstronny edytor tekstu, który umożliwi użytkownikowi tworzenie, zapisywanie, odczytywanie i modyfikowanie dokumentów. Dodatkowo, planuję zaimplementować standardowe operacje edycji, takie jak wycinanie, kopiowanie i wklejanie. Aby osiągnąć te cele, zamierzam wykorzystać bibliotekę programistyczną SDL2, która umożliwi mi stworzenie responsywnego interfejsu użytkownika oraz obsługę różnorodnych operacji na tekście.
 
-W celu realizacji tego projektu, zamierzam skorzystać z różnych bibliotek programistycznych, takich jak SDL2, FLTK, FreeType, Glew, oraz OpenGL. Te narzędzia umożliwią mi stworzenie responsywnego interfejsu użytkownika, obsługę różnych operacji na tekście, a także dostarczą narzędzi do manipulacji grafiką i czcionkami.
-
-W trakcie projektowania będę dbał o ergonomiczność interfejsu, zapewniając użytkownikowi intuicyjną obsługę oraz umożliwiając skuteczną pracę z edytorem tekstu. Dodatkowo, zamierzam zadbać o estetykę oprawy graficznej, aby użytkownik mógł korzystać z aplikacji w komfortowy i przyjemny sposób.
+W trakcie projektowania kładę szczególny nacisk na ergonomiczność interfejsu, zapewniając użytkownikowi intuicyjną obsługę, co pozwoli na efektywną pracę z edytorem tekstu. Dodatkowo, zamierzam dostosować oprawę graficzną, dbając o estetykę, aby korzystanie z aplikacji było nie tylko funkcjonalne, ale także przyjemne dla oka. Planuję również zaimplementować funkcje umożliwiające zmianę czcionki oraz dostosowywanie kolorów tła i tekstu, co pozwoli użytkownikowi spersonalizować edytor według własnych preferencji. Ostatecznym celem jest stworzenie aplikacji, która nie tylko spełni oczekiwania pod względem funkcjonalności, ale również dostarczy użytkownikowi przyjemne i komfortowe doświadczenie korzystania z edytora tekstu.
 
 ## Harmonogram
 
