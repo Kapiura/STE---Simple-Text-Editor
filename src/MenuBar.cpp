@@ -23,8 +23,8 @@ MenuBar::MenuBar(EditorWindow *w, InputEditor *ie)
     std::string tempStr = el;
 
     // Render text to get its size
-    SDL_Surface *tempSurf = TTF_RenderText_Solid(
-        _inputEditor->getFont(), tempStr.c_str(), {0, 0, 0, 255});
+    SDL_Surface *tempSurf = TTF_RenderText_Solid(_inputEditor->getFont(),
+                                                 tempStr.c_str(), _fontColor);
 
     SDL_Texture *tempTexture =
         SDL_CreateTextureFromSurface(_renderer, tempSurf);
@@ -51,8 +51,8 @@ MenuBar::MenuBar(EditorWindow *w, InputEditor *ie)
   for (auto &el : tempStr) {
     int textWidth, textHeight;
     std::string tempStr = el;
-    SDL_Surface *tempSurf = TTF_RenderText_Solid(
-        _inputEditor->getFont(), tempStr.c_str(), {0, 0, 0, 255});
+    SDL_Surface *tempSurf = TTF_RenderText_Solid(_inputEditor->getFont(),
+                                                 tempStr.c_str(), _fontColor);
     SDL_Texture *tempTexture =
         SDL_CreateTextureFromSurface(_renderer, tempSurf);
     SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
@@ -74,8 +74,8 @@ MenuBar::MenuBar(EditorWindow *w, InputEditor *ie)
   for (auto &el : tempStr) {
     int textWidth, textHeight;
     std::string tempStr = el;
-    SDL_Surface *tempSurf = TTF_RenderText_Solid(
-        _inputEditor->getFont(), tempStr.c_str(), {0, 0, 0, 255});
+    SDL_Surface *tempSurf = TTF_RenderText_Solid(_inputEditor->getFont(),
+                                                 tempStr.c_str(), _fontColor);
     SDL_Texture *tempTexture =
         SDL_CreateTextureFromSurface(_renderer, tempSurf);
     SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
@@ -97,8 +97,8 @@ MenuBar::MenuBar(EditorWindow *w, InputEditor *ie)
   for (auto &el : tempStr) {
     int textWidth, textHeight;
     std::string tempStr = el;
-    SDL_Surface *tempSurf = TTF_RenderText_Solid(
-        _inputEditor->getFont(), tempStr.c_str(), {0, 0, 0, 255});
+    SDL_Surface *tempSurf = TTF_RenderText_Solid(_inputEditor->getFont(),
+                                                 tempStr.c_str(), _fontColor);
     SDL_Texture *tempTexture =
         SDL_CreateTextureFromSurface(_renderer, tempSurf);
     SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
@@ -126,7 +126,8 @@ void MenuBar::render() {
 }
 
 void MenuBar::lineRender(int const &windowWidth) {
-  SDL_SetRenderDrawColor(_renderer, 198, 206, 206, 255);
+  SDL_SetRenderDrawColor(_renderer, _barColor.r, _barColor.g, _barColor.b,
+                         _barColor.a);
   SDL_Rect blankRect{0, 0, windowWidth, 32};
   SDL_RenderDrawRect(_renderer, &blankRect);
   SDL_RenderFillRect(_renderer, &blankRect);
@@ -140,14 +141,14 @@ void MenuBar::textsRender() {
     SDL_SetRenderDrawColor(_renderer, el.clr.r, el.clr.g, el.clr.b, el.clr.a);
     SDL_RenderDrawRect(_renderer, &el.rect);
     SDL_RenderFillRect(_renderer, &el.rect);
-    SDL_Surface *tempSurf = TTF_RenderText_Solid(
-        _inputEditor->getFont(), el.name.c_str(), {0, 0, 0, 255});
+    SDL_Surface *tempSurf = TTF_RenderText_Solid(_inputEditor->getFont(),
+                                                 el.name.c_str(), _fontColor);
     SDL_Texture *tempTexture =
         SDL_CreateTextureFromSurface(_renderer, tempSurf);
     SDL_RenderCopy(_renderer, tempTexture, NULL, &el.rect);
     SDL_DestroyTexture(tempTexture);
     SDL_FreeSurface(tempSurf);
-    SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
+    SDL_SetRenderDrawColor(_renderer, 0, 255, 255, 255);
   }
 }
 

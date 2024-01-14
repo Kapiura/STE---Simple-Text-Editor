@@ -2,6 +2,7 @@
 #include "EditorWindow.h"
 #include "FileManager.h"
 #include "InputEditor.h"
+#include <SDL2/SDL_pixels.h>
 #include <SDL2/SDL_render.h>
 #include <iterator>
 #include <vector>
@@ -63,6 +64,14 @@ public:
   void renderOpsOption(std::vector<selectOption> &vecOps);
   void handleCloseClickInFile(bool &q, selectOption &el);
   void handleMouseMotion(SDL_Event &e);
+
+  SDL_Color _fontColor = {0, 0, 0, 255};
+  SDL_Color returnFontColor() const { return _fontColor; }
+  void setFontColor(SDL_Color color) { _fontColor = color; }
+
+  SDL_Color _barColor = {198, 206, 206, 255};
+  SDL_Color returnBarColor() const { return _barColor; }
+  void setBarColor(SDL_Color color) { _barColor = color; }
 };
 
 #endif // MENUBAR_H
