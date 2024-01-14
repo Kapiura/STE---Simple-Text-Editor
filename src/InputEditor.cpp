@@ -10,7 +10,6 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_video.h>
 #include <cstddef>
-#include <cstdint>
 #include <iostream>
 #include <string>
 #include <sys/types.h>
@@ -383,10 +382,10 @@ void InputEditor::renderBlankSpaces() {
   SDL_GetWindowSize(_editorWindow.getWindow(), &windowWidth, &windowHeight);
   // creating rect of size for menu and numbers
   SDL_Rect blankRect{0, windowHeight - 40, windowWidth, 40};
-  SDL_SetRenderDrawColor(_renderer, 198, 206, 206, 255);
+  SDL_SetRenderDrawColor(_renderer, _barColor.r, _barColor.g, _barColor.b,
+                         _barColor.a);
   SDL_RenderDrawRect(_renderer, &blankRect);
   SDL_RenderFillRect(_renderer, &blankRect);
-  SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
 }
 void InputEditor::lineNumber() {
   // window size
@@ -400,7 +399,7 @@ void InputEditor::lineNumber() {
   int textWidth, textHeight;
   // rendering Line number
   SDL_Surface *tempSurface =
-      TTF_RenderText_Solid(_font, tempLine.c_str(), {0, 0, 0, 0});
+      TTF_RenderText_Solid(_font, tempLine.c_str(), _fontColor);
   SDL_Texture *tempTexture =
       SDL_CreateTextureFromSurface(_renderer, tempSurface);
   SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
@@ -411,7 +410,7 @@ void InputEditor::lineNumber() {
 
   // rendering Char number rect
   SDL_Surface *tempSurface1 =
-      TTF_RenderText_Solid(_font, tempCharNumber.c_str(), {0, 0, 0, 0});
+      TTF_RenderText_Solid(_font, tempCharNumber.c_str(), _fontColor);
   SDL_Texture *tempTexture1 =
       SDL_CreateTextureFromSurface(_renderer, tempSurface1);
   SDL_QueryTexture(tempTexture1, NULL, NULL, &textWidth, &textHeight);
@@ -433,7 +432,7 @@ void InputEditor::renderCursor() {
   // cursor size
   int textWidth, textHeight;
   // rendering cursor
-  SDL_Surface *indexSurface = TTF_RenderText_Solid(_font, "|", {0, 0, 0, 0});
+  SDL_Surface *indexSurface = TTF_RenderText_Solid(_font, "|", _fontColor);
   SDL_Texture *indexTexture =
       SDL_CreateTextureFromSurface(_renderer, indexSurface);
   SDL_QueryTexture(indexTexture, NULL, NULL, &textWidth, &textHeight);
@@ -449,8 +448,8 @@ void InputEditor::renderTextArea() {
   int textWidth, textHeight;
   // rendering every line of text wirrten by user
   for (size_t i = 0; i < _textInput.size(); ++i) {
-    SDL_Surface *tempSurface =
-        TTF_RenderText_Solid(_font, _textInput[i].c_str(), {0, 0, 0, 0});
+    SDL_Surface *tempSurface = TTF_RenderText_Solid(
+        _font, _textInput[i].c_str(), _fontColor); // font colour
     SDL_Texture *tempTexture =
         SDL_CreateTextureFromSurface(_renderer, tempSurface);
     SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
@@ -459,6 +458,5 @@ void InputEditor::renderTextArea() {
     SDL_RenderCopy(_renderer, tempTexture, NULL, &tempRect);
     SDL_DestroyTexture(tempTexture);
     SDL_FreeSurface(tempSurface);
-    // SDL_RenderPresent(_renderer);
   }
 }

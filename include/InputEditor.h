@@ -2,6 +2,7 @@
 #include "EditorWindow.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_events.h>
+#include <SDL2/SDL_pixels.h>
 #include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_ttf.h>
 #include <string>
@@ -79,6 +80,16 @@ private:
   std::string copiedText;
 
   void renderSelectShift();
+
+  SDL_Color _fontColor = {0, 0, 0, 255};
+  SDL_Color returnFontColor() const { return _fontColor; }
+  void setFontColor(SDL_Color color) { _fontColor = color; }
+  SDL_Color _barColor = {198, 206, 206, 255};
+  SDL_Color returnBarColor() const { return _barColor; }
+  void setBarColor(SDL_Color color) { _barColor = color; }
+  SDL_Color _backgroundColor = {255, 255, 255, 255};
+  SDL_Color returnBackgroundColor() const { return _backgroundColor; }
+  void setBackgroundColor(SDL_Color color) { _backgroundColor = color; }
 };
 
 #endif // TEXTEDITOR_H
