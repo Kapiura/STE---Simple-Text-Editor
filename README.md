@@ -28,6 +28,30 @@ W trakcie projektowania będę dbał o ergonomiczność interfejsu, zapewniając
 ---
 
 
+### Update 12
+
+- **Zaawansowane Działanie klawisza Enter:**
+  - Poprawiono działanie klawisza Enter, umożliwiając teraz płynne dodawanie nowych linii zarówno w środku, na początku, jak i na końcu tekstu.
+
+- **Zaznaczanie Tekstu za Pomocą Klawisza Shift:**
+  - Dodano możliwość zaznaczania tekstu za pomocą klawisza Shift, zarówno lewego, jak i prawego. Teraz zaznaczenie jest nie tylko widoczne w terminalu, ale również w interfejsie programu, zapewniając pełną kontrolę nad zaznaczonym tekstem.
+
+- **Kopiowanie do Schowka:**
+  - Wprowadzono funkcję kopiowania zaznaczonego tekstu do schowka systemowego. Teraz użytkownik może łatwo przenosić tekst między programem a innymi aplikacjami.
+
+- **Wycinanie Tekstu:**
+  - Dodano eksperymentalną funkcję wycinania tekstu. Choć obecnie w fazie testowania, pozwala ona na wycinanie zaznaczonego obszaru tekstu. Warto zauważyć, że ta funkcja jest w trakcie ciągłego doskonalenia.
+
+- **Nowa Klasa CustomizationApp:**
+  - Rozpoczęto implementację nowej klasy `CustomizationApp`, która w przyszłości umożliwi spersonalizowanie ustawień aplikacji. Na razie zawiera jedynie podstawowe definicje konsoli i pulpitu.
+
+- **Poprawki w Menubar:**
+  - Menubar został częściowo poprawiony. Aktualnie zakładka "File" działa poprawnie, jednak prace nad dwiema kolejnymi trwają. Planowane jest pełne naprawienie funkcjonalności w najbliższych aktualizacjach.
+
+- **Usprawnienia Ogólne:**
+  - Wprowadzono różne poprawki i usprawnienia, w tym naprawę drobnych błędów i optymalizacje, aby zapewnić jeszcze lepszą stabilność i wydajność programu.
+---
+
 ### Update 11
 
 **Naprawienia i Ulepszenia:**
