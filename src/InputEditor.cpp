@@ -1,5 +1,6 @@
 #include "../include/InputEditor.h"
 #include "../include/EditorWindow.h"
+#include <SDL2/SDL_clipboard.h>
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_keyboard.h>
 #include <SDL2/SDL_keycode.h>
@@ -9,6 +10,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_video.h>
 #include <cstddef>
+#include <cstdint>
 #include <iostream>
 #include <string>
 #include <sys/types.h>
@@ -54,8 +56,6 @@ void InputEditor::loadFont(const std::string &fontPath, int fontSize) {
 // IN/OUT HANDLE
 
 void InputEditor::handleEvents(SDL_Event &e) {
-  // std::cout << "Char : " << cursonOnCurrentChar << "\n";
-  // std::cout << "Line : " << cursorOnCurrentLine << "\n";
   if (e.type == SDL_KEYDOWN) {
     switch (e.key.keysym.sym) {
     case SDLK_RETURN:
@@ -94,7 +94,28 @@ void InputEditor::handleEvents(SDL_Event &e) {
         cursonOnCurrentChar += 1;
       }
       break;
-
+    case SDLK_c:
+      if (SDL_GetModState() & KMOD_CTRL) {
+        handleCtrlCX(false);
+      } else {
+        char pressedChar = static_cast<char>(e.key.keysym.sym);
+        _textInput[cursorOnCurrentLine] += pressedChar;
+        cursonOnCurrentChar += 1;
+      }
+      break;
+    case SDLK_x:
+      if (SDL_GetModState() & KMOD_CTRL) {
+        handleCtrlCX(true);
+      } else {
+        char pressedChar = static_cast<char>(e.key.keysym.sym);
+        _textInput[cursorOnCurrentLine] += pressedChar;
+        cursonOnCurrentChar += 1;
+      }
+      break;
+    case SDLK_LSHIFT:
+    case SDLK_RSHIFT:
+      this->handleShiftButton();
+      break;
     default:
       if ((e.key.keysym.sym >= SDLK_SPACE && e.key.keysym.sym <= SDLK_z)) {
         char pressedChar;
@@ -109,6 +130,17 @@ void InputEditor::handleEvents(SDL_Event &e) {
       }
       break;
     }
+  } else if (e.type == SDL_KEYUP) {
+    switch (e.key.keysym.sym) {
+    case SDLK_RSHIFT:
+    case SDLK_LSHIFT:
+      selShift.endLine = cursorOnCurrentLine;
+      selShift.endChar = cursonOnCurrentChar + 1;
+      std::cout << "Stop seletcing\n";
+      std::cout << "Line: " << selShift.endLine
+                << "\t character: " << selShift.endChar << "\n";
+      break;
+    }
   }
 }
 
@@ -118,12 +150,23 @@ void InputEditor::handleReturnKey() {
     cursorOnCurrentLine += 1;
     cursonOnCurrentChar = -1;
     _textInput.insert(_textInput.begin() + cursorOnCurrentLine, 1, "");
+  } else if (cursonOnCurrentChar == -1) {
+    std::string temp = _textInput[cursorOnCurrentLine];
+    _textInput[cursorOnCurrentLine] = "";
+    cursorOnCurrentLine += 1;
+    cursonOnCurrentChar = -1;
+    _textInput.insert(_textInput.begin() + cursorOnCurrentLine, 1, temp);
+  } else if (cursonOnCurrentChar > -1 ||
+             cursonOnCurrentChar <
+                 static_cast<int>(_textInput[cursorOnCurrentLine].size()) - 1) {
+    std::string temp =
+        _textInput[cursorOnCurrentLine].substr(cursonOnCurrentChar + 1);
+    _textInput[cursorOnCurrentLine].erase(
+        cursonOnCurrentChar + 1, _textInput[cursorOnCurrentLine].size() - 1);
+    cursorOnCurrentLine += 1;
+    cursonOnCurrentChar = -1;
+    _textInput.insert(_textInput.begin() + cursorOnCurrentLine, 1, temp);
   }
-  // else if (!_textInput[cursorOnCurrentLine].empty() )
-  // {
-  //   std::string temp = _textInput[cursorOnCurrentLine];
-  //   _textInput.insert(_textInput.begin()+cursorOnCurrentLine+1,1,temp);
-  // }
 }
 
 void InputEditor::handleUpKey() {
@@ -171,18 +214,29 @@ void InputEditor::handleLeftKey() {
 }
 
 void InputEditor::handleBackspaceKey() {
-
+  // jesli jestesmy na lini dalszej niz 1 oraz kursor jest na poczatku
+  // oraz linia nie jest pusta
+  // ustawiamy kursor na koncu poprzzedniej linii
+  // dodajemy do poprzedniej linii zawratosc usuwanej
+  // kursor leci na poprzednia linie
+  // usuwamy usuwana linie
   if (cursorOnCurrentLine > 0 && cursonOnCurrentChar == -1 &&
       !_textInput.empty()) {
     cursonOnCurrentChar = _textInput[cursorOnCurrentLine - 1].size() - 1;
     _textInput[cursorOnCurrentLine - 1] += _textInput[cursorOnCurrentLine];
     _textInput.erase(_textInput.begin() + cursorOnCurrentLine);
     cursorOnCurrentLine -= 1;
-  } else if (!_textInput[cursorOnCurrentLine].empty()) {
+  }
+  // jesli linia tekstu nie jest pusta
+  else if (!_textInput[cursorOnCurrentLine].empty()) {
+    // jesli kursor jest dalej niz na poczatkiu linii
+    // usuwamy dany znak z linii
     if (cursonOnCurrentChar > -1) {
       _textInput[cursorOnCurrentLine].erase(cursonOnCurrentChar, 1);
       cursonOnCurrentChar -= 1;
     }
+    // jesli jest pusta i kursor jest na lini dalszej niz pierwsza
+    // usuwa nam dany wiersz i kieruje logicznie kursor
   } else if (_textInput[cursorOnCurrentLine].empty() &&
 
              cursorOnCurrentLine > 0) {
@@ -210,6 +264,78 @@ bool InputEditor::checkFileSaved(std::string fileName, std::string context) {
   std::cout << "File name ; " << fileName << "\nContext : " << context << "\n";
   return false;
 }
+
+// SELECTING
+void InputEditor::handleShiftButton() {
+  selShift.startLine = cursorOnCurrentLine;
+  selShift.startChar = cursonOnCurrentChar + 1;
+  std::cout << "Start seletcing\n";
+  std::cout << "Line: " << selShift.startLine
+            << "\t character: " << selShift.startChar << "\n";
+}
+void InputEditor::handleCtrlCX(bool isItCtrlX) {
+  copiedText = "";
+  int startc = selShift.startChar;
+  int startl = selShift.startLine;
+  int endl = selShift.endLine;
+  int endc = selShift.endChar;
+
+  if (startl > endl) {
+    int temp = startl;
+    startl = endl;
+    endl = temp;
+    temp = startc;
+    startc = endc;
+    endc = temp;
+  } else if (startl == endl && startc > endc) {
+    int temp = startc;
+    startc = endc;
+    endc = temp;
+  }
+
+  if (startl == endl) {
+    copiedText += _textInput[startl].substr(startc, endc);
+  } else if (startl + 1 == endl) {
+    copiedText +=
+        _textInput[startl].substr(startc, _textInput[startl].size()) + " ";
+    copiedText += _textInput[endl].substr(0, endc);
+  } else {
+    copiedText +=
+        _textInput[startl].substr(startc, _textInput[startl].size()) + " ";
+    for (int i = startl + 1; i < endl; ++i) {
+      copiedText += _textInput[i] + " ";
+    }
+    copiedText += _textInput[endl].substr(0, endc);
+  }
+  SDL_SetClipboardText(copiedText.c_str());
+  if (isItCtrlX == true) {
+    if (startl == endl) {
+      _textInput[startl].erase(startc, endc);
+      cursonOnCurrentChar = startc - 1;
+    } else if (startl + 1 == endl) {
+      _textInput[startl].erase(startc, _textInput[startl].size());
+      _textInput[endl].erase(0, endc);
+      cursonOnCurrentChar = startc - 1;
+      cursorOnCurrentLine = startl;
+    } else {
+      _textInput[startl].erase(startc, _textInput[startl].size());
+      for (int i = startl + 1; i < endl; ++i) {
+        _textInput.erase(_textInput.begin() + i);
+        endl--;
+      }
+      _textInput[endl].erase(0, endc);
+      cursonOnCurrentChar = startc - 1;
+      cursorOnCurrentLine = startl;
+    }
+    std::cout << "Ctrl x pressed\t\"" << copiedText << "\"\n";
+  } else {
+
+    std::cout << "Ctrl c pressed\t\"" << copiedText << "\"\n";
+  }
+  deleteSelectionShift();
+}
+
+void InputEditor::deleteSelectionShift() { selShift = {0, 0, 0, 0}; }
 
 void InputEditor::handleEventMouse(SDL_Event &e) {
 
@@ -247,6 +373,8 @@ std::string InputEditor::getTextContent() {
 }
 
 // RENDERING
+
+void InputEditor::renderSelectShift() {}
 
 void InputEditor::renderBlankSpaces() {
   // render menu space and space for line and char number of text

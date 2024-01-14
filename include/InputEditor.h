@@ -54,6 +54,9 @@ protected:
   void handleRightKey();
   void handleLeftKey();
   void handleBackspaceKey();
+  void handleShiftButton();
+  void handleCtrlCX(bool isItCtrlX);
+  void deleteSelectionShift();
 
   void lineNumber();
   void renderBlankSpaces();
@@ -65,6 +68,17 @@ private:
   int cursonOnCurrentChar;
   int startY;
   bool _cursorVisible;
+  std::vector<std::string> selectedText;
+  struct selectionShift {
+    int startLine;
+    int startChar;
+    int endLine;
+    int endChar;
+  };
+  selectionShift selShift;
+  std::string copiedText;
+
+  void renderSelectShift();
 };
 
 #endif // TEXTEDITOR_H
