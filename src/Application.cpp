@@ -74,12 +74,16 @@ int Application::run() {
           }
         }
       }
+      _window->render();
       _textEditor->handleEvents(event);
       _textEditor->handleEventMouse(event);
       _window->render();
       _textEditor->render();
       _menuBar->render();
       _menuBar->handleEventMouse(event, quit);
+      SDL_SetRenderDrawColor(_window->getRenderer(), _backgroundColor.r,
+                             _backgroundColor.g, _backgroundColor.b,
+                             _backgroundColor.a);
       SDL_RenderPresent(_window->getRenderer());
     }
   }

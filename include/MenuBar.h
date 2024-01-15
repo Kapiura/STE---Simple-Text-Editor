@@ -1,11 +1,13 @@
 #pragma once
-#include "EditorWindow.h"
-#include "FileManager.h"
-#include "InputEditor.h"
 #include <SDL2/SDL_pixels.h>
 #include <SDL2/SDL_render.h>
 #include <iterator>
 #include <vector>
+
+#include "CustomizationApp.h"
+#include "EditorWindow.h"
+#include "FileManager.h"
+#include "InputEditor.h" // Include the header for InputEditor here
 #ifndef MENUBAR_H
 #define MENUBAR_H
 
@@ -29,6 +31,9 @@ private:
   InputEditor *_savingInput;
   FileManager *_filemanager;
   EditorWindow *_savingWindow;
+
+  EditorWindow *_customWindow;
+  CustomizationApp *_custom;
 
   struct selectOption {
     std::string name;

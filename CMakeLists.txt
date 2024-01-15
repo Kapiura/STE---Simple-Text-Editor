@@ -9,7 +9,7 @@ find_package(X11 REQUIRED)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
 
 # Add all c source files under the src directory
-file(GLOB SOURCES "src/*.cpp" "src/InputEditor.cpp") # Add InputEditor.cpp
+file(GLOB SOURCES "src/*.cpp") # Add InputEditor.cpp
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 # Add all headers files under the include directory

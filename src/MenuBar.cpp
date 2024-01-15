@@ -112,6 +112,9 @@ MenuBar::MenuBar(EditorWindow *w, InputEditor *ie)
     SDL_DestroyTexture(tempTexture);
     SDL_FreeSurface(tempSurf);
   }
+  for (auto &el : selOps) {
+    changeButtonColor(el, {198, 206, 206, 255});
+  }
 
   std::cout << "MenuBar object has been created\n";
 }
@@ -148,7 +151,7 @@ void MenuBar::textsRender() {
     SDL_RenderCopy(_renderer, tempTexture, NULL, &el.rect);
     SDL_DestroyTexture(tempTexture);
     SDL_FreeSurface(tempSurf);
-    SDL_SetRenderDrawColor(_renderer, 0, 255, 255, 255);
+    // SDL_SetRenderDrawColor(_renderer, 0, 255, 255, 255);
   }
 }
 
@@ -161,8 +164,8 @@ void MenuBar::renderOpsOption(std::vector<selectOption> &vecOps) {
     SDL_RenderFillRect(_renderer, &el.rect);
     SDL_RenderDrawRect(_renderer, &el.rect);
 
-    SDL_Surface *tempSurf = TTF_RenderText_Solid(
-        _inputEditor->getFont(), el.name.c_str(), {0, 0, 0, 255});
+    SDL_Surface *tempSurf = TTF_RenderText_Solid(_inputEditor->getFont(),
+                                                 el.name.c_str(), _fontColor);
     SDL_Texture *tempTexture =
         SDL_CreateTextureFromSurface(_renderer, tempSurf);
     SDL_RenderCopy(_renderer, tempTexture, NULL, &el.rect);
@@ -170,7 +173,7 @@ void MenuBar::renderOpsOption(std::vector<selectOption> &vecOps) {
     SDL_DestroyTexture(tempTexture);
     SDL_FreeSurface(tempSurf);
 
-    SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
+    // SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
   }
 }
 
@@ -384,11 +387,33 @@ void MenuBar::handleEventMouse(SDL_Event &e, bool &q) {
                             "Ok");
       }
       if (isMouseOver(mouseX, mouseY, el) && el.name == "Customize") {
-        int btn;
-        this->PopBackWindow(
-            btn, "Customization window",
-            "Here you will be able to customize font, colorsetc.\n:) ",
-            " Soon ");
+
+        _customWindow = new EditorWindow("Customization", 250, 400);
+        _custom = new CustomizationApp(_customWindow);
+        bool sQuit = false;
+        SDL_Event sEvent;
+        while (!sQuit) {
+          while (SDL_PollEvent(&sEvent) != 0) {
+            if (sEvent.type == SDL_QUIT) {
+              sQuit = true;
+            } else if (sEvent.window.event == SDL_WINDOWEVENT_CLOSE &&
+                       sEvent.window.windowID ==
+                           SDL_GetWindowID(_customWindow->getWindow())) {
+              sQuit = true;
+            }
+            _customWindow->render();
+            _custom->render();
+            SDL_RenderPresent(_customWindow->getRenderer());
+          }
+        }
+        delete _custom;
+        delete _customWindow;
+        //
+        // int btn;
+        // this->PopBackWindow(
+        //     btn, "Customization window",
+        //     "Here you will be able to customize font, colorsetc.\n:) ",
+        //     " Soon ");
       }
     }
   }

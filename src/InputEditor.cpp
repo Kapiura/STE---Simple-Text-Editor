@@ -1,4 +1,5 @@
 #include "../include/InputEditor.h"
+// #include ".../include/MenuBar.h"
 #include "../include/EditorWindow.h"
 #include <SDL2/SDL_clipboard.h>
 #include <SDL2/SDL_events.h>
@@ -15,7 +16,6 @@
 #include <sys/types.h>
 
 // INIT
-
 InputEditor::InputEditor(SDL_Renderer *renderer,
                          const EditorWindow &editorWindow)
     : _renderer(renderer), _font(nullptr), _editorWindow(editorWindow),
@@ -34,6 +34,7 @@ InputEditor::InputEditor(SDL_Renderer *renderer,
   for (auto &line : _textInput) {
     line = "";
   }
+  // _menuBar = new MenuBar(editorWindow, this);
 }
 
 InputEditor::~InputEditor() {
@@ -426,6 +427,8 @@ void InputEditor::render() {
   this->renderCursor();
   this->renderBlankSpaces();
   this->lineNumber();
+  SDL_SetRenderDrawColor(_renderer, _backgroundColor.r, _backgroundColor.g,
+                         _backgroundColor.b, _backgroundColor.a);
 }
 
 void InputEditor::renderCursor() {
