@@ -91,7 +91,7 @@ void Application::popUpWindow(int &btn) {
   messageboxdata.flags = SDL_MESSAGEBOX_WARNING;
   messageboxdata.window = _window->getWindow();
   messageboxdata.title = "Leaving unsaved file";
-  messageboxdata.message = "Are you really want ot quit without saving?";
+  messageboxdata.message = "Do you really want to quit without saving?";
   SDL_MessageBoxButtonData buttons[] = {
       {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Yes"},
       {SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "No"}};
