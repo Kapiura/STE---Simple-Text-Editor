@@ -1,5 +1,5 @@
 #pragma once
-#include "EditorWindow.h"
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_pixels.h>
@@ -7,6 +7,9 @@
 #include <SDL2/SDL_ttf.h>
 #include <string>
 #include <vector>
+
+#include "EditorWindow.h"
+// #include "MenuBar.h"
 #ifndef TEXTEDITOR_H
 #define TEXTEDITOR_H
 
