@@ -1,6 +1,10 @@
+# ignore whole build folder
 build/
+# ignore every exec type file
 *.o
 *.a
 *.so
+# ignore added libraries
 lib/
+# ignore my own c++formater from nvim
 src/.clang-format
