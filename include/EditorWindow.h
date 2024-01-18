@@ -14,7 +14,7 @@ public:
 
   SDL_Renderer *getRenderer() const;
   SDL_Window *getWindow() const;
-  TTF_Font *getFont() const;
+  // TTF_Font *getFont() const { return _font; };
 
   int getWindowHeight() const;
   int getWindowWidth() const;
