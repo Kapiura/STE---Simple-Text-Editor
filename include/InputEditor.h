@@ -36,6 +36,7 @@ public:
   void handleCtrlV();
   void handleCtrlZ();
   void handleEventMouse(SDL_Event &e);
+  SDL_Color returnBackgroundColor() const { return _backgroundColor; }
 
 protected:
   void renderCursor();
@@ -91,7 +92,6 @@ private:
   SDL_Color returnBarColor() const { return _barColor; }
   void setBarColor(SDL_Color color) { _barColor = color; }
   SDL_Color _backgroundColor = {255, 255, 255, 255};
-  SDL_Color returnBackgroundColor() const { return _backgroundColor; }
   void setBackgroundColor(SDL_Color color) { _backgroundColor = color; }
 };
 
