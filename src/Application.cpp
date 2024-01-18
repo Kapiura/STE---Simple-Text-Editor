@@ -81,6 +81,7 @@ int Application::run() {
       _textEditor->render();
       _menuBar->render();
       _menuBar->handleEventMouse(event, quit);
+      _backgroundColor = _textEditor->returnBackgroundColor();
       SDL_SetRenderDrawColor(_window->getRenderer(), _backgroundColor.r,
                              _backgroundColor.g, _backgroundColor.b,
                              _backgroundColor.a);
