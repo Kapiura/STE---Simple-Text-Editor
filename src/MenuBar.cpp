@@ -151,7 +151,6 @@ void MenuBar::textsRender() {
     SDL_RenderCopy(_renderer, tempTexture, NULL, &el.rect);
     SDL_DestroyTexture(tempTexture);
     SDL_FreeSurface(tempSurf);
-    // SDL_SetRenderDrawColor(_renderer, 0, 255, 255, 255);
   }
 }
 
@@ -172,8 +171,6 @@ void MenuBar::renderOpsOption(std::vector<selectOption> &vecOps) {
 
     SDL_DestroyTexture(tempTexture);
     SDL_FreeSurface(tempSurf);
-
-    // SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
   }
 }
 
@@ -388,32 +385,33 @@ void MenuBar::handleEventMouse(SDL_Event &e, bool &q) {
       }
       if (isMouseOver(mouseX, mouseY, el) && el.name == "Customize") {
 
-        _customWindow = new EditorWindow("Customization", 250, 400);
-        _custom = new CustomizationApp(_customWindow);
+        _customWindow = new EditorWindow("Customization", 350, 400);
+        _custom = new CustomizationApp(_customWindow, _inputEditor);
         bool sQuit = false;
         SDL_Event sEvent;
+        // bool leftMouseButtonDown = false;
+        int mouseX, mouseY;
         while (!sQuit) {
           while (SDL_PollEvent(&sEvent) != 0) {
+            mouseX = sEvent.motion.x;
+            mouseY = sEvent.motion.y;
             if (sEvent.type == SDL_QUIT) {
               sQuit = true;
             } else if (sEvent.window.event == SDL_WINDOWEVENT_CLOSE &&
                        sEvent.window.windowID ==
                            SDL_GetWindowID(_customWindow->getWindow())) {
               sQuit = true;
+            } else if (sEvent.type == SDL_MOUSEBUTTONDOWN &&
+                       sEvent.button.button == SDL_BUTTON_LEFT) {
+              _custom->changeSliderValue(mouseX, mouseY);
             }
             _customWindow->render();
-            _custom->render();
+            _custom->render(mouseX, mouseY);
             SDL_RenderPresent(_customWindow->getRenderer());
           }
         }
         delete _custom;
         delete _customWindow;
-        //
-        // int btn;
-        // this->PopBackWindow(
-        //     btn, "Customization window",
-        //     "Here you will be able to customize font, colorsetc.\n:) ",
-        //     " Soon ");
       }
     }
   }
