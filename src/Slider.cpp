@@ -98,26 +98,28 @@ void Slider::renderValueText() {
   SDL_FreeSurface(tempSurf);
 }
 
-bool Slider::isMouseOverSlider(int mouseX, int mouseY) {
+bool Slider::isMouseOverSlider(int &mouseX, int &mouseY) {
   return mouseX >= sliderVal.x && mouseX <= (sliderVal.x + sliderVal.w) &&
          mouseY >= sliderVal.y && mouseY <= (sliderVal.y + sliderVal.h);
 }
 
-void Slider::setSliderValue(int xx, int yy) {
+void Slider::setSliderValue(int &yy, bool isClicked) {
   std::cout << yy << "\n";
-  if (1 == 0) {
-    std::cout << xx << "\n";
-  }
-  if (isMouseOver) {
-    if (yy > 266) {
+  if (isClicked == true) {
+    if (isMouseOver) {
+      if (yy > 266) {
 
-      sliderVal.y = 265;
-    } else if (yy < 10) {
+        sliderVal.y = 265;
+        yMove = sliderVal.y - 10;
+      } else if (yy < 10) {
 
-      sliderVal.y = 0;
-    } else {
+        sliderVal.y = 10;
+        yMove = 0;
+      } else {
 
-      sliderVal.y = yy;
+        sliderVal.y = yy;
+        yMove = yy - 10;
+      }
     }
   }
 }

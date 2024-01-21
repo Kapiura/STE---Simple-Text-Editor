@@ -22,9 +22,9 @@ public:
   void updateColorText();
   std::string returnColorText();
   void setValueText();
-  bool isMouseOverSlider(int mouseX, int mouseY);
+  bool isMouseOverSlider(int &mouseX, int &mouseY);
 
-  void setSliderValue(int xx, int yy);
+  void setSliderValue(int &yy, bool isclicked);
 
 private:
   int r;
