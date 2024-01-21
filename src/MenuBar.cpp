@@ -390,21 +390,67 @@ void MenuBar::handleEventMouse(SDL_Event &e, bool &q) {
         bool sQuit = false;
         SDL_Event sEvent;
         // bool leftMouseButtonDown = false;
-        int mouseX, mouseY;
+        // int mouseX, mouseY;
         while (!sQuit) {
           while (SDL_PollEvent(&sEvent) != 0) {
-            mouseX = sEvent.motion.x;
-            mouseY = sEvent.motion.y;
+            SDL_GetMouseState(&mouseX, &mouseY);
+            // mouseX = sEvent.motion.x;
+            // mouseY = sEvent.motion.y;
             if (sEvent.type == SDL_QUIT) {
               sQuit = true;
             } else if (sEvent.window.event == SDL_WINDOWEVENT_CLOSE &&
                        sEvent.window.windowID ==
                            SDL_GetWindowID(_customWindow->getWindow())) {
               sQuit = true;
-            } else if (sEvent.type == SDL_MOUSEBUTTONDOWN &&
-                       sEvent.button.button == SDL_BUTTON_LEFT) {
-              _custom->changeSliderValue(mouseX, mouseY);
             }
+            if (sEvent.type == SDL_MOUSEMOTION ||
+                sEvent.type == SDL_MOUSEBUTTONDOWN) {
+              if (sEvent.button.button == SDL_BUTTON_LEFT) {
+                _custom->changeSliderValue(mouseX, mouseY, true);
+              } else {
+                _custom->changeSliderValue(mouseX, mouseY, false);
+              }
+            }
+            // switch (sEvent.type) {
+            // case SDL_MOUSEMOTION:
+            //   // int mouseX, mouseY;
+            //   // SDL_GetMouseState(&mouse1X, &mouse1Y);
+            //   if (sEvent.type == SDL_MOUSEBUTTONDOWN) {
+            //     if (sEvent.button.button == SDL_BUTTON_LEFT) {
+            //       // int mouse1X, mouse1Y;
+            //       // leftMouseButtonDown = true;
+            //       // SDL_GetMouseState(&mouse1X, &mouse1Y);
+            //       _custom->changeSliderValue(mouseX, mouseY);
+            //     }
+            //   }
+            //   _custom->changeSliderValue(mouseX, mouseY);
+            //   break;
+            // }
+
+            // if (sEvent.type == SDL_MOUSEMOTION) {
+            //   int mouse1X, mouse1Y;
+            //   SDL_GetMouseState(&mouse1X, &mouse1Y);
+            //   _custom->changeSliderValue(mouse1X, mouse1Y);
+            // } else
+            // switch (sEvent.type) {
+            // case SDL_MOUSEBUTTONDOWN:
+            //   if (sEvent.button.button == SDL_BUTTON_LEFT) {
+            //     int mouse1X, mouse1Y;
+            //     leftMouseButtonDown = true;
+            //     SDL_GetMouseState(&mouse1X, &mouse1Y);
+            //     _custom->changeSliderValue(mouse1X, mouse1Y,
+            //                                leftMouseButtonDown);
+            //   }
+            // else {
+            //   leftMouseButtonDown = false;
+            // }
+            // break;
+            // case SDL_MOUSEMOTION:
+            //   int mouse1X, mouse1Y;
+            //   SDL_GetMouseState(&mouse1X, &mouse1Y);
+            //   _custom->changeSliderValue(mouse1X, mouse1Y,
+            //   leftMouseButtonDown); break;
+            // }
             _customWindow->render();
             _custom->render(mouseX, mouseY);
             SDL_RenderPresent(_customWindow->getRenderer());
