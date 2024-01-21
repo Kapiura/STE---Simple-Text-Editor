@@ -41,9 +41,11 @@ void CustomizationApp::render(int mouseX, int mouseY) {
                          backgroundColor.a);
 }
 
-void CustomizationApp::changeSliderValue(int mouseX, int mouseY) {
-  render(mouseX, mouseY);
-  sliderRed->setSliderValue(mouseX, mouseY);
-  sliderBlue->setSliderValue(mouseX, mouseY);
-  sliderGreen->setSliderValue(mouseX, mouseY);
+void CustomizationApp::changeSliderValue(int &mouseX, int &mouseY,
+                                         bool isCliked) {
+  // render(mouseX, mouseY);
+  std::cout << mouseX << "\n";
+  sliderRed->setSliderValue(mouseY, isCliked);
+  sliderBlue->setSliderValue(mouseY, isCliked);
+  sliderGreen->setSliderValue(mouseY, isCliked);
 }

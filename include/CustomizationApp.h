@@ -12,7 +12,7 @@ public:
 
   void render(int mouseX, int mouseY);
 
-  void changeSliderValue(int mouseX, int mouseY);
+  void changeSliderValue(int &mouseX, int &mouseY, bool isclicked);
 
 private:
   EditorWindow *_editorWindow;
