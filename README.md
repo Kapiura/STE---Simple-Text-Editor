@@ -15,8 +15,8 @@ W trakcie projektowania kładę szczególny nacisk na ergonomiczność interfejs
 | 5 : [13.11.2023]-[19.11.2023]         | Rozwinięcie funkcjonalności o zapis, modyfikację i odczyt dokumentów            |
 | 6 : [20.11.2023]-[26.11.2023]        | Wprowadzenie skrótów klawiszowych do kopiowania, wycinania i wklejania           |
 | 7-8 : [27.11.2023]-[10.12.2023]       | Dodanie menu w górnej części interfejsu, zgodnego z konwencją edytorów tekstowych |
-| 9 : [11.12.2023]-[17.12.2023]         | Implementacja możliwości zmiany czcionki w edytorze                              |
-| 10 : [18.12.2023]-[24.12.2023]        | Dodanie opcji personalizacji interfejsu edytora                                 |
+| 9 : [11.12.2023]-[17.12.2023]         | Implementacja możliwości zmiany koloru czcionki w edytorze                              |
+| 10 : [18.12.2023]-[24.12.2023]        | Dodanie opcji zmiany koloru tła edytora                                 |
 | 11 : [25.12.2023]-[31.12.2023]       | Przeprowadzenie poprawek estetycznych w interfejsie                              |
 | 12-13 : [01.01.2024]-[14.01.2024]    | Rozwiązanie wszelakich błędów i poprawki jakościowe                             |
 | 14 : [15.01.2024]-[21.01.2024]       | Przygotowanie i prezentacja końcowa projektu                                     |
