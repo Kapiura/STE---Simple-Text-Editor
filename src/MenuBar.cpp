@@ -419,7 +419,7 @@ void MenuBar::handleEventMouse(SDL_Event &e, bool &q) {
             std::vector<std::string> tempTextVector = {""};
             std::cout << "New file\n";
             _inputEditor->setText(tempTextVector);
-            _inputEditor->setCursorDefaulr();
+            _inputEditor->setCursorDefault();
           }
         }
         if (isMouseOver(mouseX, mouseY, el) && el.name == "Open") {
