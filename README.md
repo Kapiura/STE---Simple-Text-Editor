@@ -25,6 +25,23 @@ W trakcie projektowania kładę szczególny nacisk na ergonomiczność interfejs
 ![](https://github.com/Kapiura/STE---Simple-Text-Editor/blob/main/Reademe_assets/2ndPrototype.gif)
 ---
 
+### Update 13
+
+- **Naprawione Otwieranie Plików do Edycji:**
+  - Usunięto problem z otwieraniem plików do edycji, który wynikał z błędnie ustawionego kursora w programie. Teraz proces otwierania plików działa poprawnie.
+
+- **Skrót Klawiszowy do Szybkiego Zapisu:**
+  - Dodano skrót klawiszowy `Ctrl + S` do szybkiego zapisu. Teraz użytkownik może błyskawicznie zapisać swoje zmiany, nie sięgając po myszkę.
+
+- **Poprawione Działanie Menu:**
+  - Menu zostało zoptymalizowane, a niewyświetlone przyciski nie będą już reagować, zgodnie z oczekiwaniami użytkownika.
+
+- **Skończone Okno do Customizacji Edytora:**
+  - Dodano nowe okno umożliwiające spersonalizowanie ustawień edytora. Znajdują się w nim przyciski do ustawienia, przywrócenia domyślnych ustawień, zmiany tła, zmiany czcionki oraz trzy slidery z wartościami RGB.
+
+- **Usprawnienia Ogólne:**
+  - Wprowadzono różne poprawki i usprawnienia, obejmujące m.in. naprawę błędów i dostosowania, aby zapewnić jeszcze lepszą funkcjonalność i wydajność programu.
+---
 
 ### Update 12
 
