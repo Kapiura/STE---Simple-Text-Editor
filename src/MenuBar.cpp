@@ -14,15 +14,19 @@
 MenuBar::MenuBar(EditorWindow *w, InputEditor *ie)
     : _windowEditor(w), _inputEditor(ie),
       _renderer(_windowEditor->getRenderer()) {
-  int tempx = 1;
+  int tempx = 0;
   // SDL_Color backgroundcolor = { 255, 255, 255, 255 };
   // main options
+
   std::vector<std::string> tempStr = {"File", "Edit", "Options"};
-  for (auto &el : tempStr) {
+
+  int maxWidth = 0;
+  int totalHeight = 0;
+
+  for (const auto &el : tempStr) {
     int textWidth, textHeight;
     std::string tempStr = el;
 
-    // Render text to get its size
     SDL_Surface *tempSurf = TTF_RenderText_Solid(_inputEditor->getFont(),
                                                  tempStr.c_str(), _fontColor);
 
@@ -31,86 +35,177 @@ MenuBar::MenuBar(EditorWindow *w, InputEditor *ie)
 
     SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
 
-    SDL_Color col = {0, 0, 0, 0};
-    SDL_Rect rect = {tempx, 0, textWidth, textHeight};
-
-    // Update size of the rectangle based on text size
-    selOps.push_back({el, tempx, 0, textWidth, textHeight, col, false, rect});
-
-    // Increment tempx by the total width of the text and some padding
-    tempx += textWidth + 10;
-
-    // Clean up
     SDL_DestroyTexture(tempTexture);
     SDL_FreeSurface(tempSurf);
+
+    maxWidth = std::max(maxWidth, textWidth) + 10;
+    totalHeight += textHeight;
   }
+
+  for (const auto &el : tempStr) {
+    int textHeight;
+    std::string tempStr = el;
+
+    SDL_Surface *tempSurf = TTF_RenderText_Solid(_inputEditor->getFont(),
+                                                 tempStr.c_str(), _fontColor);
+
+    SDL_Texture *tempTexture =
+        SDL_CreateTextureFromSurface(_renderer, tempSurf);
+
+    SDL_QueryTexture(tempTexture, NULL, NULL, nullptr, &textHeight);
+
+    SDL_DestroyTexture(tempTexture);
+    SDL_FreeSurface(tempSurf);
+
+    SDL_Color col = {0, 0, 0, 0};
+    SDL_Rect rect = {tempx, 0, maxWidth, textHeight};
+
+    selOps.push_back({el, tempx, 0, maxWidth, textHeight, col, false, rect});
+
+    tempx += maxWidth - 1;
+  }
+
   // File - New Open Save Save as Close
   int tempy = selOps[0].h;
   tempx = selOps[0].x;
   tempStr = {"New", "Open", "Save", "Save as", "Close"};
-  for (auto &el : tempStr) {
+
+  int totalHeightFile = 0;
+
+  for (const auto &el : tempStr) {
     int textWidth, textHeight;
     std::string tempStr = el;
+
     SDL_Surface *tempSurf = TTF_RenderText_Solid(_inputEditor->getFont(),
                                                  tempStr.c_str(), _fontColor);
     SDL_Texture *tempTexture =
         SDL_CreateTextureFromSurface(_renderer, tempSurf);
-    SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
-    SDL_Color col = {255, 255, 255, 255};
-    SDL_Rect rect = {tempx, tempy, textWidth, textHeight};
 
-    selFile.push_back(
-        {el, tempx, tempy, textWidth, textHeight, col, false, rect});
-    tempy += textHeight + 2;
+    SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
 
     SDL_DestroyTexture(tempTexture);
     SDL_FreeSurface(tempSurf);
+
+    maxWidth = std::max(maxWidth, textWidth);
+    totalHeightFile += textHeight;
+  }
+
+  for (const auto &el : tempStr) {
+    int textHeight;
+    std::string tempStr = el;
+
+    SDL_Surface *tempSurf = TTF_RenderText_Solid(_inputEditor->getFont(),
+                                                 tempStr.c_str(), _fontColor);
+    SDL_Texture *tempTexture =
+        SDL_CreateTextureFromSurface(_renderer, tempSurf);
+
+    SDL_QueryTexture(tempTexture, NULL, NULL, nullptr, &textHeight);
+
+    SDL_DestroyTexture(tempTexture);
+    SDL_FreeSurface(tempSurf);
+
+    SDL_Color col = {255, 255, 255, 255};
+    SDL_Rect rect = {tempx, tempy, maxWidth,
+                     textHeight}; // Ustaw szerokość na maksymalną
+
+    selFile.push_back(
+        {el, tempx, tempy, maxWidth, textHeight, col, false, rect});
+    tempy += textHeight - 1;
   }
   // Edit Undo Paste
+
   tempy = selOps[1].h;
   tempx = selOps[1].x;
   tempStr = {"Undo", "Paste"};
 
-  for (auto &el : tempStr) {
+  int totalHeightEdit = 0;
+
+  for (const auto &el : tempStr) {
     int textWidth, textHeight;
     std::string tempStr = el;
+
     SDL_Surface *tempSurf = TTF_RenderText_Solid(_inputEditor->getFont(),
                                                  tempStr.c_str(), _fontColor);
     SDL_Texture *tempTexture =
         SDL_CreateTextureFromSurface(_renderer, tempSurf);
-    SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
-    SDL_Color col = {255, 255, 255, 255};
-    SDL_Rect rect = {tempx, tempy, textWidth, textHeight};
 
-    selEdit.push_back(
-        {el, tempx, tempy, textWidth, textHeight, col, false, rect});
-    tempy += textHeight + 2;
+    SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
 
     SDL_DestroyTexture(tempTexture);
     SDL_FreeSurface(tempSurf);
+
+    totalHeightEdit += textHeight;
   }
+
+  tempx = selOps[1].x;
+
+  for (const auto &el : tempStr) {
+    int textHeight;
+    std::string tempStr = el;
+
+    SDL_Surface *tempSurf = TTF_RenderText_Solid(_inputEditor->getFont(),
+                                                 tempStr.c_str(), _fontColor);
+    SDL_Texture *tempTexture =
+        SDL_CreateTextureFromSurface(_renderer, tempSurf);
+
+    SDL_QueryTexture(tempTexture, NULL, NULL, nullptr, &textHeight);
+
+    SDL_DestroyTexture(tempTexture);
+    SDL_FreeSurface(tempSurf);
+
+    SDL_Color col = {255, 255, 255, 255};
+    SDL_Rect rect = {tempx, tempy, maxWidth, textHeight};
+
+    selEdit.push_back(
+        {el, tempx, tempy, maxWidth, textHeight, col, false, rect});
+    tempy += textHeight - 1;
+  }
+  // optiosn
 
   tempy = selOps[2].h;
   tempx = selOps[2].x;
-  tempStr = {"Customize", "Credits"};
+  tempStr = {"Custom", "Credits"};
 
-  for (auto &el : tempStr) {
+  int totalHeightOptions = 0;
+
+  for (const auto &el : tempStr) {
     int textWidth, textHeight;
     std::string tempStr = el;
+
     SDL_Surface *tempSurf = TTF_RenderText_Solid(_inputEditor->getFont(),
                                                  tempStr.c_str(), _fontColor);
     SDL_Texture *tempTexture =
         SDL_CreateTextureFromSurface(_renderer, tempSurf);
-    SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
-    SDL_Color col = {255, 255, 255, 255};
-    SDL_Rect rect = {tempx, tempy, textWidth, textHeight};
 
-    selOptions.push_back(
-        {el, tempx, tempy, textWidth, textHeight, col, false, rect});
-    tempy += textHeight + 2;
+    SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
 
     SDL_DestroyTexture(tempTexture);
     SDL_FreeSurface(tempSurf);
+
+    maxWidth = std::max(maxWidth, textWidth);
+    totalHeightOptions += textHeight;
+  }
+
+  for (const auto &el : tempStr) {
+    int textHeight;
+    std::string tempStr = el;
+
+    SDL_Surface *tempSurf = TTF_RenderText_Solid(_inputEditor->getFont(),
+                                                 tempStr.c_str(), _fontColor);
+    SDL_Texture *tempTexture =
+        SDL_CreateTextureFromSurface(_renderer, tempSurf);
+
+    SDL_QueryTexture(tempTexture, NULL, NULL, nullptr, &textHeight);
+
+    SDL_DestroyTexture(tempTexture);
+    SDL_FreeSurface(tempSurf);
+
+    SDL_Color col = {255, 255, 255, 255};
+    SDL_Rect rect = {tempx, tempy, maxWidth, textHeight};
+
+    selOptions.push_back(
+        {el, tempx, tempy, maxWidth, textHeight, col, false, rect});
+    tempy += textHeight - 1;
   }
   for (auto &el : selOps) {
     changeButtonColor(el, {198, 206, 206, 255});
@@ -137,20 +232,36 @@ void MenuBar::lineRender(int const &windowWidth) {
 }
 
 void MenuBar::textsRender() {
-  for (auto &el : selOps) {
+  const int textOffsetX = 0;
+  const int textOffsetY = 0;
+
+  for (auto &button : selOps) {
     int mouseX, mouseY;
     SDL_GetMouseState(&mouseX, &mouseY);
 
-    SDL_SetRenderDrawColor(_renderer, el.clr.r, el.clr.g, el.clr.b, el.clr.a);
-    SDL_RenderDrawRect(_renderer, &el.rect);
-    SDL_RenderFillRect(_renderer, &el.rect);
-    SDL_Surface *tempSurf = TTF_RenderText_Solid(_inputEditor->getFont(),
-                                                 el.name.c_str(), _fontColor);
-    SDL_Texture *tempTexture =
-        SDL_CreateTextureFromSurface(_renderer, tempSurf);
-    SDL_RenderCopy(_renderer, tempTexture, NULL, &el.rect);
-    SDL_DestroyTexture(tempTexture);
-    SDL_FreeSurface(tempSurf);
+    SDL_SetRenderDrawColor(_renderer, button.clr.r, button.clr.g, button.clr.b,
+                           button.clr.a);
+    SDL_RenderFillRect(_renderer, &button.rect);
+    SDL_SetRenderDrawColor(_renderer, 0, 0, 0, 255);
+    SDL_RenderDrawRect(_renderer, &button.rect);
+
+    int textWidth, textHeight;
+    TTF_SizeText(_inputEditor->getFont(), button.name.c_str(), &textWidth,
+                 &textHeight);
+
+    int textX = button.rect.x + (button.rect.w - textWidth) / 2 + textOffsetX;
+    int textY = button.rect.y + (button.rect.h - textHeight) / 2 + textOffsetY;
+
+    SDL_Surface *surface = TTF_RenderText_Solid(
+        _inputEditor->getFont(), button.name.c_str(), _fontColor);
+
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(_renderer, surface);
+    SDL_FreeSurface(surface);
+
+    SDL_Rect textDestRect = {textX, textY, textWidth, textHeight};
+    SDL_RenderCopy(_renderer, texture, nullptr, &textDestRect);
+
+    SDL_DestroyTexture(texture);
   }
 }
 
@@ -161,13 +272,21 @@ void MenuBar::renderOpsOption(std::vector<selectOption> &vecOps) {
 
     SDL_SetRenderDrawColor(_renderer, el.clr.r, el.clr.g, el.clr.b, el.clr.a);
     SDL_RenderFillRect(_renderer, &el.rect);
+    // SDL_RenderDrawRect(_renderer, &el.rect);
+    SDL_SetRenderDrawColor(_renderer, 0, 0, 0, 255);
     SDL_RenderDrawRect(_renderer, &el.rect);
 
-    SDL_Surface *tempSurf = TTF_RenderText_Solid(_inputEditor->getFont(),
-                                                 el.name.c_str(), _fontColor);
+    TTF_Font *font = _inputEditor->getFont();
+    SDL_Surface *tempSurf =
+        TTF_RenderText_Solid(font, el.name.c_str(), _fontColor);
     SDL_Texture *tempTexture =
         SDL_CreateTextureFromSurface(_renderer, tempSurf);
-    SDL_RenderCopy(_renderer, tempTexture, NULL, &el.rect);
+
+    SDL_Rect textDestRect = {el.rect.x + (el.rect.w - tempSurf->w) / 2,
+                             el.rect.y + (el.rect.h - tempSurf->h) / 2,
+                             tempSurf->w, tempSurf->h};
+
+    SDL_RenderCopy(_renderer, tempTexture, NULL, &textDestRect);
 
     SDL_DestroyTexture(tempTexture);
     SDL_FreeSurface(tempSurf);
@@ -383,19 +502,15 @@ void MenuBar::handleEventMouse(SDL_Event &e, bool &q) {
                             "written in C++ by using SDL library.",
                             "Ok");
       }
-      if (isMouseOver(mouseX, mouseY, el) && el.name == "Customize") {
+      if (isMouseOver(mouseX, mouseY, el) && el.name == "Custom") {
 
         _customWindow = new EditorWindow("Customization", 350, 400);
         _custom = new CustomizationApp(_customWindow, _inputEditor);
         bool sQuit = false;
         SDL_Event sEvent;
-        // bool leftMouseButtonDown = false;
-        // int mouseX, mouseY;
         while (!sQuit) {
           while (SDL_PollEvent(&sEvent) != 0) {
             SDL_GetMouseState(&mouseX, &mouseY);
-            // mouseX = sEvent.motion.x;
-            // mouseY = sEvent.motion.y;
             if (sEvent.type == SDL_QUIT) {
               sQuit = true;
             } else if (sEvent.window.event == SDL_WINDOWEVENT_CLOSE &&
@@ -411,48 +526,8 @@ void MenuBar::handleEventMouse(SDL_Event &e, bool &q) {
                 _custom->changeSliderValue(mouseX, mouseY, false);
               }
             }
-            // switch (sEvent.type) {
-            // case SDL_MOUSEMOTION:
-            //   // int mouseX, mouseY;
-            //   // SDL_GetMouseState(&mouse1X, &mouse1Y);
-            //   if (sEvent.type == SDL_MOUSEBUTTONDOWN) {
-            //     if (sEvent.button.button == SDL_BUTTON_LEFT) {
-            //       // int mouse1X, mouse1Y;
-            //       // leftMouseButtonDown = true;
-            //       // SDL_GetMouseState(&mouse1X, &mouse1Y);
-            //       _custom->changeSliderValue(mouseX, mouseY);
-            //     }
-            //   }
-            //   _custom->changeSliderValue(mouseX, mouseY);
-            //   break;
-            // }
-
-            // if (sEvent.type == SDL_MOUSEMOTION) {
-            //   int mouse1X, mouse1Y;
-            //   SDL_GetMouseState(&mouse1X, &mouse1Y);
-            //   _custom->changeSliderValue(mouse1X, mouse1Y);
-            // } else
-            // switch (sEvent.type) {
-            // case SDL_MOUSEBUTTONDOWN:
-            //   if (sEvent.button.button == SDL_BUTTON_LEFT) {
-            //     int mouse1X, mouse1Y;
-            //     leftMouseButtonDown = true;
-            //     SDL_GetMouseState(&mouse1X, &mouse1Y);
-            //     _custom->changeSliderValue(mouse1X, mouse1Y,
-            //                                leftMouseButtonDown);
-            //   }
-            // else {
-            //   leftMouseButtonDown = false;
-            // }
-            // break;
-            // case SDL_MOUSEMOTION:
-            //   int mouse1X, mouse1Y;
-            //   SDL_GetMouseState(&mouse1X, &mouse1Y);
-            //   _custom->changeSliderValue(mouse1X, mouse1Y,
-            //   leftMouseButtonDown); break;
-            // }
             _customWindow->render();
-            _custom->render(mouseX, mouseY);
+            _custom->render(mouseX, mouseY, sEvent);
             SDL_RenderPresent(_customWindow->getRenderer());
           }
         }

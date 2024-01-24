@@ -44,6 +44,7 @@ private:
     SDL_Color clr;
     bool visible;
     SDL_Rect rect;
+    // int fontSize;
   };
   std::vector<selectOption> selOps;
   std::vector<selectOption> selFile;
@@ -77,6 +78,7 @@ public:
   SDL_Color _barColor = {198, 206, 206, 255};
   SDL_Color returnBarColor() const { return _barColor; }
   void setBarColor(SDL_Color color) { _barColor = color; }
+  // void loadFont(const std::string &fontPath, int fontSize);
 };
 
 #endif // MENUBAR_H
