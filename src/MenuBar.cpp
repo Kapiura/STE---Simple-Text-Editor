@@ -227,7 +227,7 @@ void MenuBar::lineRender(int const &windowWidth) {
   SDL_SetRenderDrawColor(_renderer, _barColor.r, _barColor.g, _barColor.b,
                          _barColor.a);
   SDL_Rect blankRect{0, 0, windowWidth, 32};
-  SDL_RenderDrawRect(_renderer, &blankRect);
+  // SDL_RenderDrawRect(_renderer, &blankRect);
   SDL_RenderFillRect(_renderer, &blankRect);
 }
 
@@ -484,55 +484,59 @@ void MenuBar::handleEventMouse(SDL_Event &e, bool &q) {
     }
 
     // Check if any edit option is clicked
-    for (auto &el : selEdit) {
-      if (isMouseOver(mouseX, mouseY, el) && el.name == "Undo") {
-        std::cout << "Undo\n";
-      }
-      if (isMouseOver(mouseX, mouseY, el) && el.name == "Paste") {
-        _inputEditor->handleCtrlV();
+    if (editOps) {
+      for (auto &el : selEdit) {
+        if (isMouseOver(mouseX, mouseY, el) && el.name == "Undo") {
+          std::cout << "Undo\n";
+        }
+        if (isMouseOver(mouseX, mouseY, el) && el.name == "Paste") {
+          _inputEditor->handleCtrlV();
+        }
       }
     }
 
     // Check if any options option is clicked
-    for (auto &el : selOptions) {
-      if (isMouseOver(mouseX, mouseY, el) && el.name == "Credits") {
-        int btn;
-        this->PopBackWindow(btn, "Credits",
-                            "Text editor made by Kapiura\nAll is "
-                            "written in C++ by using SDL library.",
-                            "Ok");
-      }
-      if (isMouseOver(mouseX, mouseY, el) && el.name == "Custom") {
-
-        _customWindow = new EditorWindow("Customization", 350, 400);
-        _custom = new CustomizationApp(_customWindow, _inputEditor);
-        bool sQuit = false;
-        SDL_Event sEvent;
-        while (!sQuit) {
-          while (SDL_PollEvent(&sEvent) != 0) {
-            SDL_GetMouseState(&mouseX, &mouseY);
-            if (sEvent.type == SDL_QUIT) {
-              sQuit = true;
-            } else if (sEvent.window.event == SDL_WINDOWEVENT_CLOSE &&
-                       sEvent.window.windowID ==
-                           SDL_GetWindowID(_customWindow->getWindow())) {
-              sQuit = true;
-            }
-            if (sEvent.type == SDL_MOUSEMOTION ||
-                sEvent.type == SDL_MOUSEBUTTONDOWN) {
-              if (sEvent.button.button == SDL_BUTTON_LEFT) {
-                _custom->changeSliderValue(mouseX, mouseY, true);
-              } else {
-                _custom->changeSliderValue(mouseX, mouseY, false);
-              }
-            }
-            _customWindow->render();
-            _custom->render(mouseX, mouseY, sEvent);
-            SDL_RenderPresent(_customWindow->getRenderer());
-          }
+    if (opsOps) {
+      for (auto &el : selOptions) {
+        if (isMouseOver(mouseX, mouseY, el) && el.name == "Credits") {
+          int btn;
+          this->PopBackWindow(btn, "Credits",
+                              "Text editor made by Kapiura\nAll is "
+                              "written in C++ by using SDL library.",
+                              "Ok");
         }
-        delete _custom;
-        delete _customWindow;
+        if (isMouseOver(mouseX, mouseY, el) && el.name == "Custom") {
+
+          _customWindow = new EditorWindow("Customization", 350, 400);
+          _custom = new CustomizationApp(_customWindow, _inputEditor);
+          bool sQuit = false;
+          SDL_Event sEvent;
+          while (!sQuit) {
+            while (SDL_PollEvent(&sEvent) != 0) {
+              SDL_GetMouseState(&mouseX, &mouseY);
+              if (sEvent.type == SDL_QUIT) {
+                sQuit = true;
+              } else if (sEvent.window.event == SDL_WINDOWEVENT_CLOSE &&
+                         sEvent.window.windowID ==
+                             SDL_GetWindowID(_customWindow->getWindow())) {
+                sQuit = true;
+              }
+              if (sEvent.type == SDL_MOUSEMOTION ||
+                  sEvent.type == SDL_MOUSEBUTTONDOWN) {
+                if (sEvent.button.button == SDL_BUTTON_LEFT) {
+                  _custom->changeSliderValue(mouseX, mouseY, true);
+                } else {
+                  _custom->changeSliderValue(mouseX, mouseY, false);
+                }
+              }
+              _customWindow->render();
+              _custom->render(mouseX, mouseY, sEvent);
+              SDL_RenderPresent(_customWindow->getRenderer());
+            }
+          }
+          delete _custom;
+          delete _customWindow;
+        }
       }
     }
   }
