@@ -1,4 +1,5 @@
 #include "../include/InputEditor.h"
+#include "../include/SaveManager.h"
 // #include ".../include/MenuBar.h"
 #include "../include/EditorWindow.h"
 #include <SDL2/SDL_clipboard.h>
@@ -79,6 +80,17 @@ void InputEditor::handleEvents(SDL_Event &e) {
     case SDLK_v:
       if (SDL_GetModState() & KMOD_CTRL) {
         handleCtrlV();
+      } else {
+        char pressedChar = static_cast<char>(e.key.keysym.sym);
+        _textInput[cursorOnCurrentLine] += pressedChar;
+        cursonOnCurrentChar += 1;
+      }
+      break;
+    case SDLK_s:
+      if (SDL_GetModState() & KMOD_CTRL) {
+        SaveManager savingProc(_editorWindow.getFileName(),
+                               this->getTextContent(), _editorWindow.getPath());
+        savingProc.saveFile(_editorWindow.getWindow());
       } else {
         char pressedChar = static_cast<char>(e.key.keysym.sym);
         _textInput[cursorOnCurrentLine] += pressedChar;
