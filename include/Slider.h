@@ -25,6 +25,10 @@ public:
   bool isMouseOverSlider(int &mouseX, int &mouseY);
 
   void setSliderValue(int &yy, bool isclicked);
+  void setMoveSliderColor(int v);
+  void setSliderValue(int v);
+
+  int getValue() const { return yMove; };
 
 private:
   int r;
@@ -53,7 +57,7 @@ private:
   int min_val = 0;
   int max_val = 255;
   SDL_Renderer *_renderer;
-  int fontSize = 20;
+  int fontSize = 21;
   InputEditor *_inputEditor;
 
   bool isMouseOver;

@@ -2,7 +2,6 @@
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_ttf.h>
-#include <algorithm>
 #include <iostream>
 #include <string>
 Slider::Slider(EditorWindow *window, InputEditor *_editorInput, int x, int w,
@@ -37,12 +36,11 @@ Slider::Slider(EditorWindow *window, InputEditor *_editorInput, int x, int w,
 Slider::~Slider() { std::cout << "Slider object has been deleted\n"; }
 
 void Slider::renderSlider() {
-  // Check if the mouse is over the slider
-
   SDL_SetRenderDrawColor(_renderer, r, g, b, 255);
-  // Render the slider
   SDL_RenderFillRect(_renderer, &slider);
 }
+
+void Slider::setMoveSliderColor(int v) { yMove = v; }
 
 void Slider::setSliderColor(int re, int gr, int bl) {
   r = re;
@@ -81,19 +79,30 @@ void Slider::loadFont(const std::string &fontPath, int fontSize) {
 }
 
 void Slider::renderValueText() {
-
   SDL_SetRenderDrawColor(_renderer, textColor.r, textColor.g, textColor.b, 255);
-  std::string temp = this->returnColorText();
+
+  // Konwertuj wartość liczbową na napis.
+  std::string valueText = std::to_string(yMove);
+
+  // Renderuj tekst na powierzchni.
   SDL_Surface *tempSurf =
-      TTF_RenderText_Solid(_font, std::to_string(yMove).c_str(), textColor);
+      TTF_RenderText_Solid(_font, valueText.c_str(), textColor);
   SDL_Texture *tempTexture = SDL_CreateTextureFromSurface(_renderer, tempSurf);
   int textWidth, textHeight;
   SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
 
-  value = {x - 5, y + h + 20, textWidth, textHeight};
-  SDL_RenderCopy(_renderer, tempTexture, NULL, &value);
-  SDL_RenderDrawRect(_renderer, &value);
+  // Ustaw pozycję i rozmiar dla tekstu (na środku slidera poniżej niego).
+  int textX = x + (w - textWidth) / 2 + 5; // Przesunięcie o 5 pikseli w prawo.
+  int textY = y + h + 10;                  // 10 pikseli poniżej slidera.
 
+  // Utwórz prostokąt dla tekstu.
+  SDL_Rect valueRect = {textX, textY, textWidth, textHeight};
+
+  // Renderuj tekst na docelowej powierzchni.
+  SDL_RenderCopy(_renderer, tempTexture, NULL, &valueRect);
+  SDL_RenderDrawRect(_renderer, &valueRect);
+
+  // Zwolnij zasoby.
   SDL_DestroyTexture(tempTexture);
   SDL_FreeSurface(tempSurf);
 }
@@ -104,7 +113,7 @@ bool Slider::isMouseOverSlider(int &mouseX, int &mouseY) {
 }
 
 void Slider::setSliderValue(int &yy, bool isClicked) {
-  std::cout << yy << "\n";
+
   if (isClicked == true) {
     if (isMouseOver) {
       if (yy > 266) {
@@ -123,3 +132,5 @@ void Slider::setSliderValue(int &yy, bool isClicked) {
     }
   }
 }
+
+void Slider::setSliderValue(int v) { sliderVal.y = v; }
