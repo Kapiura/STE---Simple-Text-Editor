@@ -118,7 +118,6 @@ bool CustomizationApp::isMouseOverBtns(int &mouseX, int &mouseY,
 }
 
 void CustomizationApp::buttonFun(int &mouseX, int &mouseY, SDL_Event &e) {
-  // changeBackgroundColor(true);
   SDL_Rect temp[4] = {btnSetCurrent, btnSetDefault, btnSelectFont,
                       btnSelectBackground};
   for (int i = 0; i < 4; ++i) {
