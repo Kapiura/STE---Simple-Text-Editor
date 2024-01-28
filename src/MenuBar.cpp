@@ -227,8 +227,9 @@ void MenuBar::lineRender(int const &windowWidth) {
   SDL_SetRenderDrawColor(_renderer, _barColor.r, _barColor.g, _barColor.b,
                          _barColor.a);
   SDL_Rect blankRect{0, 0, windowWidth, 32};
-  // SDL_RenderDrawRect(_renderer, &blankRect);
   SDL_RenderFillRect(_renderer, &blankRect);
+  SDL_SetRenderDrawColor(_renderer, 0, 0, 0, 255);
+  SDL_RenderDrawRect(_renderer, &blankRect);
 }
 
 void MenuBar::textsRender() {
