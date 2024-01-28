@@ -26,6 +26,26 @@ W trakcie projektowania kładę szczególny nacisk na ergonomiczność interfejs
 ---
 
 
+### Update 15
+
+#### Nowe Funkcje, Poprawki i Usprawnienia
+
+- **Dodano Kolorowe Zaznaczanie przy Użyciu Przycisku `Shift`:**
+  - Teraz, korzystając z przycisku `Shift`, możesz dokonywać zaznaczeń w edytorze, a zaznaczone fragmenty będą wyróżnione kolorami. Ta funkcja ułatwia identyfikację obszarów tekstu i zwiększa efektywność pracy.
+
+- **Dodatkowe Usprawnienia Wizualne:**
+  - Wprowadzono dodatkowe poprawki wizualne, aby poprawić ogólną czytelność i estetykę interfejsu edytora. Teraz praca z programem staje się jeszcze bardziej przyjemna dla oka.
+
+- **Optymalizacje Wydajnościowe:**
+  - Działa szybciej i sprawniej! Wprowadzono optymalizacje, które mają na celu zwiększenie ogólnej wydajności programu, zapewniając płynne i efektywne korzystanie.
+
+- **Rozwiązano Drobne Problemy:**
+  - Zidentyfikowano i naprawiono drobne problemy zgłaszane przez użytkowników, co przyczynia się do jeszcze stabilniejszego działania aplikacji.
+
+- **Wykryto Kolejne Błędy do Poprawki:**
+  - Odkryto kolejne błędy, które są już w fazie poprawek. Nasz zespół pracuje nad szybkim rozwiązaniem, aby zapewnić Ci jeszcze lepszą jakość użytkowania.
+---
+
 ### Update 14
 
 #### Nowe Funkcje i Poprawki
