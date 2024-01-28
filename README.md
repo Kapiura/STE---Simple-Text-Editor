@@ -25,6 +25,28 @@ W trakcie projektowania kładę szczególny nacisk na ergonomiczność interfejs
 ![](https://github.com/Kapiura/STE---Simple-Text-Editor/blob/main/Reademe_assets/2ndPrototype.gif)
 ---
 
+
+### Update 14
+
+#### Nowe Funkcje i Poprawki
+
+- **Dodano Funkcję Cofania `Ctrl + Z`:**
+  - Teraz możesz korzystać z funkcji cofania (`Ctrl + Z`), która pozwala błyskawicznie cofać ostatnie zmiany w edytorze. Spraw, by każda edycja była bezpieczna i łatwo odwracalna.
+
+- **Naprawiony Błąd z Klikaniem w Niewidoczne Opcje Menu:**
+  - Błąd związany z możliwością przypadkowego klikania w niewidoczne opcje menu został usunięty. Interakcje z menu teraz są spójne i eliminują potencjalne kłopoty.
+
+- **Estetyczne Udoskonalenia dla Menu Bara:**
+  - Menu Bar przeszedł estetyczne poprawki, nadając mu bardziej nowoczesny i intuicyjny wygląd. Dzięki temu korzystanie z programu staje się jeszcze przyjemniejsze.
+
+- **Rozbudowane Okno Personalizacji Edytora:**
+  - Okno do personalizacji edytora zostało rozbudowane o nowe opcje. Teraz masz kontrolę nad ustawieniami, możesz przywrócić domyślne parametry, zmieniać tło, dostosowywać czcionki i precyzyjnie dostosować kolory za pomocą trzech suwaków RGB.
+
+- **Ogólne Poprawki i Usprawnienia:**
+  - Wprowadzono różne poprawki i usprawnienia, obejmujące naprawę błędów oraz dostosowania, zapewniając jeszcze lepszą funkcjonalność i stabilność programu.
+---
+
+
 ### Update 13
 
 - **Naprawione Otwieranie Plików do Edycji:**
