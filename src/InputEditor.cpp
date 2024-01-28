@@ -1,7 +1,6 @@
 #include "../include/InputEditor.h"
-#include "../include/SaveManager.h"
-// #include ".../include/MenuBar.h"
 #include "../include/EditorWindow.h"
+#include "../include/SaveManager.h"
 #include <SDL2/SDL_clipboard.h>
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_keyboard.h>
@@ -11,8 +10,11 @@
 #include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_video.h>
+#include <algorithm>
+#include <bits/fs_fwd.h>
 #include <cstddef>
 #include <iostream>
+#include <iterator>
 #include <string>
 #include <sys/types.h>
 
@@ -22,7 +24,8 @@ InputEditor::InputEditor(SDL_Renderer *renderer,
     : _renderer(renderer), _font(nullptr), _editorWindow(editorWindow),
       fontSize(24), cursorOnCurrentLine(0), cursonOnCurrentChar(-1),
       _cursorVisible(true) {
-  startY = 10;
+  startY = 0;
+  startX = 0;
   std::cout << "TextEditor object has been created\n";
   _textArea.h = editorWindow.getWindowHeight();
   _textArea.w = editorWindow.getWindowWidth();
@@ -61,6 +64,7 @@ void InputEditor::handleEvents(SDL_Event &e) {
     switch (e.key.keysym.sym) {
     case SDLK_RETURN:
       handleReturnKey();
+      deleteSelectionShift();
       break;
     case SDLK_UP:
       handleUpKey();
@@ -76,57 +80,84 @@ void InputEditor::handleEvents(SDL_Event &e) {
       break;
     case SDLK_BACKSPACE:
       handleBackspaceKey();
+      deleteSelectionShift();
       break;
     case SDLK_v:
       if (SDL_GetModState() & KMOD_CTRL) {
+
+        addHistory();
         handleCtrlV();
       } else {
+        addHistory();
         char pressedChar = static_cast<char>(e.key.keysym.sym);
         _textInput[cursorOnCurrentLine] += pressedChar;
+        // int winW, winH;
+        // SDL_GetWindowSize(_editorWindow.getWindow(), &winW, &winH);
         cursonOnCurrentChar += 1;
+        // if ((cursonOnCurrentChar + 1) * 14 > winW)
+        //   startX -= 14
+        // addHistory();
       }
+      deleteSelectionShift();
       break;
     case SDLK_s:
+
+      deleteSelectionShift();
       if (SDL_GetModState() & KMOD_CTRL) {
         SaveManager savingProc(_editorWindow.getFileName(),
                                this->getTextContent(), _editorWindow.getPath());
         savingProc.saveFile(_editorWindow.getWindow());
       } else {
+        addHistory();
         char pressedChar = static_cast<char>(e.key.keysym.sym);
         _textInput[cursorOnCurrentLine] += pressedChar;
         cursonOnCurrentChar += 1;
       }
       break;
+
     case SDLK_z:
+      deleteSelectionShift();
       if (SDL_GetModState() & KMOD_CTRL) {
         handleCtrlZ();
       } else {
+        addHistory();
         char pressedChar = static_cast<char>(e.key.keysym.sym);
         _textInput[cursorOnCurrentLine] += pressedChar;
         cursonOnCurrentChar += 1;
+        // addHistory();
       }
+      // this->addHistory(_textInput);
       break;
     case SDLK_c:
       if (SDL_GetModState() & KMOD_CTRL) {
         handleCtrlCX(false);
+        // addHistory();
       } else {
         char pressedChar = static_cast<char>(e.key.keysym.sym);
         _textInput[cursorOnCurrentLine] += pressedChar;
         cursonOnCurrentChar += 1;
+        // addHistory();
       }
       break;
     case SDLK_x:
       if (SDL_GetModState() & KMOD_CTRL) {
         handleCtrlCX(true);
+        // addHistory();
       } else {
         char pressedChar = static_cast<char>(e.key.keysym.sym);
+        addHistory();
         _textInput[cursorOnCurrentLine] += pressedChar;
         cursonOnCurrentChar += 1;
+        // addHistory();
       }
+      // this->addHistory();
       break;
     case SDLK_LSHIFT:
     case SDLK_RSHIFT:
+      shiftKeyDown = false;
+      // deleteSelectionShift();
       this->handleShiftButton();
+      prevShift = selShift;
       break;
     default:
       if ((e.key.keysym.sym >= SDLK_SPACE && e.key.keysym.sym <= SDLK_z)) {
@@ -136,9 +167,17 @@ void InputEditor::handleEvents(SDL_Event &e) {
         } else {
           pressedChar = static_cast<char>(e.key.keysym.sym);
         }
+
+        addHistory();
         _textInput[cursorOnCurrentLine].insert(
             static_cast<int>(cursonOnCurrentChar) + 1, 1, pressedChar);
         cursonOnCurrentChar += 1;
+        int winW, winH;
+        SDL_GetWindowSize(_editorWindow.getWindow(), &winW, &winH);
+        if ((cursonOnCurrentChar + 1) * 14 > winW)
+          startX -= 14;
+
+        deleteSelectionShift();
       }
       break;
     }
@@ -146,11 +185,16 @@ void InputEditor::handleEvents(SDL_Event &e) {
     switch (e.key.keysym.sym) {
     case SDLK_RSHIFT:
     case SDLK_LSHIFT:
+      shiftKeyDown = false;
       selShift.endLine = cursorOnCurrentLine;
       selShift.endChar = cursonOnCurrentChar + 1;
       std::cout << "Stop seletcing\n";
       std::cout << "Line: " << selShift.endLine
                 << "\t character: " << selShift.endChar << "\n";
+      if (selShift.startLine == selShift.endLine &&
+          selShift.endChar == selShift.startChar) {
+        deleteSelectionShift();
+      }
       break;
     }
   }
@@ -159,26 +203,36 @@ void InputEditor::handleEvents(SDL_Event &e) {
 void InputEditor::handleReturnKey() {
   if (cursonOnCurrentChar ==
       static_cast<int>(_textInput[cursorOnCurrentLine].size()) - 1) {
+    addHistory();
     cursorOnCurrentLine += 1;
     cursonOnCurrentChar = -1;
     _textInput.insert(_textInput.begin() + cursorOnCurrentLine, 1, "");
+    startX = 0;
+    // addHistory();
   } else if (cursonOnCurrentChar == -1) {
+    addHistory();
     std::string temp = _textInput[cursorOnCurrentLine];
     _textInput[cursorOnCurrentLine] = "";
     cursorOnCurrentLine += 1;
     cursonOnCurrentChar = -1;
+    startX = 0;
     _textInput.insert(_textInput.begin() + cursorOnCurrentLine, 1, temp);
+    // addHistory();
   } else if (cursonOnCurrentChar > -1 ||
              cursonOnCurrentChar <
                  static_cast<int>(_textInput[cursorOnCurrentLine].size()) - 1) {
+    addHistory();
     std::string temp =
         _textInput[cursorOnCurrentLine].substr(cursonOnCurrentChar + 1);
     _textInput[cursorOnCurrentLine].erase(
         cursonOnCurrentChar + 1, _textInput[cursorOnCurrentLine].size() - 1);
     cursorOnCurrentLine += 1;
     cursonOnCurrentChar = -1;
+    startX = 0;
     _textInput.insert(_textInput.begin() + cursorOnCurrentLine, 1, temp);
+    // addHistory();
   }
+  // this->addHistory(_textInput);
 }
 
 void InputEditor::handleUpKey() {
@@ -226,39 +280,35 @@ void InputEditor::handleLeftKey() {
 }
 
 void InputEditor::handleBackspaceKey() {
-  // jesli jestesmy na lini dalszej niz 1 oraz kursor jest na poczatku
-  // oraz linia nie jest pusta
-  // ustawiamy kursor na koncu poprzzedniej linii
-  // dodajemy do poprzedniej linii zawratosc usuwanej
-  // kursor leci na poprzednia linie
-  // usuwamy usuwana linie
   if (cursorOnCurrentLine > 0 && cursonOnCurrentChar == -1 &&
       !_textInput.empty()) {
+    addHistory();
     cursonOnCurrentChar = _textInput[cursorOnCurrentLine - 1].size() - 1;
     _textInput[cursorOnCurrentLine - 1] += _textInput[cursorOnCurrentLine];
     _textInput.erase(_textInput.begin() + cursorOnCurrentLine);
     cursorOnCurrentLine -= 1;
-  }
-  // jesli linia tekstu nie jest pusta
-  else if (!_textInput[cursorOnCurrentLine].empty()) {
-    // jesli kursor jest dalej niz na poczatkiu linii
-    // usuwamy dany znak z linii
+    // addHistory();
+  } else if (!_textInput[cursorOnCurrentLine].empty()) {
     if (cursonOnCurrentChar > -1) {
+      addHistory();
       _textInput[cursorOnCurrentLine].erase(cursonOnCurrentChar, 1);
       cursonOnCurrentChar -= 1;
+      // addHistory();
     }
-    // jesli jest pusta i kursor jest na lini dalszej niz pierwsza
-    // usuwa nam dany wiersz i kieruje logicznie kursor
   } else if (_textInput[cursorOnCurrentLine].empty() &&
 
              cursorOnCurrentLine > 0) {
+    addHistory();
     _textInput.erase(_textInput.begin() + cursorOnCurrentLine);
     cursorOnCurrentLine -= 1;
     cursonOnCurrentChar =
         static_cast<int>(_textInput[cursorOnCurrentLine].size() - 1);
+    // addHistory();
   }
+  // this->addHistory(_textInput);
 }
 
+// HANDLE CTRL V
 void InputEditor::handleCtrlV() {
   const char *clipboardText = SDL_GetClipboardText();
   if (clipboardText != nullptr) {
@@ -269,22 +319,46 @@ void InputEditor::handleCtrlV() {
   }
   std::cout << "CTRL+V has been pressed\n";
 }
+// HANDLE CTRL Z
 
-void InputEditor::handleCtrlZ() { std::cout << "CTRL+Z has been pressed\n"; }
-
-bool InputEditor::checkFileSaved(std::string fileName, std::string context) {
-  std::cout << "File name ; " << fileName << "\nContext : " << context << "\n";
-  return false;
+void InputEditor::handleCtrlZ() {
+  if (historyCursor.empty()) {
+    std::cout << "Cannot undo. History is empty.\n" << std::endl;
+  } else {
+    std::cout << "Current\t Cursor: " << cursonOnCurrentChar << "\n";
+    std::cout << "Previous\t Cursor: " << *--historyCursor.end() << "\n";
+    cursonOnCurrentChar = *--historyCursor.end();
+    cursorOnCurrentLine = *--historyLine.end();
+    _textInput = *--historyText.end();
+    std::cout << "CTRL+Z has been pressed\n";
+    historyCursor.erase(historyCursor.end());
+    historyLine.erase(historyLine.end());
+    historyText.erase(historyText.end());
+  }
 }
+
+// bool InputEditor::checkFileSaved(std::string fileName, std::string context) {
+//   std::cout << "File name ; " << fileName << "\nContext : " << context <<
+//   "\n"; return false;
+// }
+
+// RENDER SELECTED TEXT AREA
+// void InputEditor::renderSelecedTextArea() {
+//   std::cout << "dupa\n";
+//   std::cout << "dupa\n";
+//   std::cout << "dupa\n";
+// }
 
 // SELECTING
 void InputEditor::handleShiftButton() {
+
   selShift.startLine = cursorOnCurrentLine;
   selShift.startChar = cursonOnCurrentChar + 1;
   std::cout << "Start seletcing\n";
   std::cout << "Line: " << selShift.startLine
             << "\t character: " << selShift.startChar << "\n";
 }
+// HANDLE CTRL X and C
 void InputEditor::handleCtrlCX(bool isItCtrlX) {
   copiedText = "";
   int startc = selShift.startChar;
@@ -354,16 +428,43 @@ void InputEditor::handleEventMouse(SDL_Event &e) {
   if (e.type == SDL_MOUSEWHEEL) {
     int count = _textInput.size();
     int scrollY = e.wheel.y;
+    int windowWidth, windowHeight;
+    SDL_GetWindowSize(_editorWindow.getWindow(), &windowWidth, &windowHeight);
+    int tempYSize = (windowHeight - 64) / 32;
 
-    if (scrollY < 0 && startY < 10) {
-      std::cout << "Scroll down" << std::endl;
-      startY += 32;
-    } else if (scrollY > 0 && count > 11 && 10 - (count - 11) * 32 < startY) {
-      std::cout << "Scroll Up" << std::endl;
-      startY -= 32;
+    std::cout << windowWidth / 57 << "\n";
+    // scroll X
+    if ((e.type == SDL_KEYDOWN && (SDL_GetModState() & KMOD_CTRL)) ||
+        (e.type == SDL_MOUSEWHEEL && (SDL_GetModState() & KMOD_CTRL))) {
+
+      int longestElement =
+          std::max_element(_textInput.begin(), _textInput.end(),
+                           [](const std::string &a, const std::string &b) {
+                             return a.length() < b.length();
+                           })
+              ->size();
+
+      if ((scrollY < 0 && (longestElement * 14) - windowWidth > 0 &&
+           std::abs(startX) < longestElement * 14 - windowWidth)) {
+        startX -= 14;
+      } else if (scrollY > 0 && startX < 0) {
+        startX += 14;
+      }
+
     }
-    std::cout << "StartY = " << startY << "\n";
-    std::cout << "Count = " << count << "\n";
+    // scroll Y
+    else {
+      if (scrollY < 0 && count > tempYSize &&
+          16 - (count - tempYSize) * 32 < startY) {
+        std::cout << "Scroll down" << std::endl;
+        startY -= 32;
+      } else if (scrollY > 0 && startY < 0) {
+        std::cout << "Scroll Up" << std::endl;
+        startY += 32;
+      }
+      std::cout << "StartY = " << startY << "\n";
+      std::cout << "Count = " << count << "\n";
+    }
   }
 }
 
@@ -386,8 +487,6 @@ std::string InputEditor::getTextContent() {
 
 // RENDERING
 
-void InputEditor::renderSelectShift() {}
-
 void InputEditor::renderBlankSpaces() {
   // render menu space and space for line and char number of text
   // current size of window
@@ -397,8 +496,9 @@ void InputEditor::renderBlankSpaces() {
   SDL_Rect blankRect{0, windowHeight - 40, windowWidth, 40};
   SDL_SetRenderDrawColor(_renderer, _barColor.r, _barColor.g, _barColor.b,
                          _barColor.a);
-  SDL_RenderDrawRect(_renderer, &blankRect);
   SDL_RenderFillRect(_renderer, &blankRect);
+  SDL_SetRenderDrawColor(_renderer, 0, 0, 0, 255);
+  SDL_RenderDrawRect(_renderer, &blankRect);
 }
 void InputEditor::lineNumber() {
   // window size
@@ -436,6 +536,7 @@ void InputEditor::lineNumber() {
 void InputEditor::render() {
   // rendering all InputEditor object
   this->renderTextArea();
+  // this->renderSelecedTextArea();
   this->renderCursor();
   this->renderBlankSpaces();
   this->lineNumber();
@@ -451,8 +552,9 @@ void InputEditor::renderCursor() {
   SDL_Texture *indexTexture =
       SDL_CreateTextureFromSurface(_renderer, indexSurface);
   SDL_QueryTexture(indexTexture, NULL, NULL, &textWidth, &textHeight);
-  SDL_Rect indexRect = {(cursonOnCurrentChar * 14) + 7,
-                        (cursorOnCurrentLine + 1) * 32, textWidth, textHeight};
+  SDL_Rect indexRect = {(cursonOnCurrentChar * 14) + 7 + startX,
+                        (cursorOnCurrentLine + 1) * 32 + startY, textWidth,
+                        textHeight};
   SDL_RenderCopy(_renderer, indexTexture, NULL, &indexRect);
   SDL_DestroyTexture(indexTexture);
   SDL_FreeSurface(indexSurface);
@@ -463,15 +565,122 @@ void InputEditor::renderTextArea() {
   int textWidth, textHeight;
   // rendering every line of text wirrten by user
   for (size_t i = 0; i < _textInput.size(); ++i) {
-    SDL_Surface *tempSurface = TTF_RenderText_Solid(
-        _font, _textInput[i].c_str(), _fontColor); // font colour
+    SDL_Surface *tempSurface =
+        TTF_RenderText_Solid(_font, _textInput[i].c_str(), _fontColor);
+
     SDL_Texture *tempTexture =
         SDL_CreateTextureFromSurface(_renderer, tempSurface);
     SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
-    SDL_Rect tempRect = {0, static_cast<int>((i + 1) * 32), textWidth,
-                         textHeight};
+    SDL_Rect tempRect = {0 + startX, static_cast<int>((i + 1) * 32 + startY),
+                         textWidth, textHeight};
     SDL_RenderCopy(_renderer, tempTexture, NULL, &tempRect);
     SDL_DestroyTexture(tempTexture);
     SDL_FreeSurface(tempSurface);
+  }
+}
+
+void InputEditor::renderSelecedTextArea() {
+  int textWidth, textHeight;
+
+  if (!shiftKeyDown || !((selShift.startLine == prevShift.endLine &&
+                          selShift.startChar == prevShift.endChar) &&
+                         (selShift.startLine == selShift.endLine &&
+                          selShift.startChar == selShift.endChar) &&
+                         (selShift.startLine == 0 && selShift.startChar == 0 &&
+                          selShift.endChar == 0 && selShift.endLine == 0))) {
+    for (int i = 0; i < static_cast<int>(_textInput.size()); ++i) {
+      if ((i > selShift.startLine && i < selShift.endLine)) {
+        SDL_Surface *tempSurface =
+            TTF_RenderText_Solid(_font, _textInput[i].c_str(), _fontColor);
+
+        SDL_Texture *tempTexture =
+            SDL_CreateTextureFromSurface(_renderer, tempSurface);
+        SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
+        SDL_Rect tempRect = {0, static_cast<int>((i + 1) * 32), textWidth,
+                             textHeight};
+        SDL_SetRenderDrawColor(_renderer, 255, 0, 0, 255);
+        SDL_RenderFillRect(_renderer, &tempRect);
+        SDL_RenderCopy(_renderer, tempTexture, NULL, &tempRect);
+        SDL_DestroyTexture(tempTexture);
+        SDL_FreeSurface(tempSurface);
+
+      } else if ((i < selShift.startLine && i > selShift.endLine)) {
+        std::swap(selShift.startLine, selShift.endLine);
+        std::swap(selShift.startChar, selShift.endChar);
+        SDL_Surface *tempSurface =
+            TTF_RenderText_Solid(_font, _textInput[i].c_str(), _fontColor);
+
+        SDL_Texture *tempTexture =
+            SDL_CreateTextureFromSurface(_renderer, tempSurface);
+        SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
+        SDL_Rect tempRect = {0, static_cast<int>((i + 1) * 32), textWidth,
+                             textHeight};
+        SDL_SetRenderDrawColor(_renderer, 255, 0, 0, 255);
+        SDL_RenderFillRect(_renderer, &tempRect);
+        SDL_RenderCopy(_renderer, tempTexture, NULL, &tempRect);
+        SDL_DestroyTexture(tempTexture);
+        SDL_FreeSurface(tempSurface);
+        //   SDL_Surface *tempSurface =
+        //       TTF_RenderText_Solid(_font, _textInput[i].c_str(), _fontColor);
+        //
+        //   SDL_Texture *tempTexture =
+        //       SDL_CreateTextureFromSurface(_renderer, tempSurface);
+        //   SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
+        //   SDL_Rect tempRect = {0, static_cast<int>((i + 1) * 32), textWidth,
+        //                        textHeight};
+        //   SDL_SetRenderDrawColor(_renderer, 255, 0, 0, 255);
+        //   SDL_RenderFillRect(_renderer, &tempRect);
+        //   SDL_RenderCopy(_renderer, tempTexture, NULL, &tempRect);
+        //   SDL_DestroyTexture(tempTexture);
+        //   SDL_FreeSurface(tempSurface);
+      }
+    }
+    // if (selShift.startLine < selShift.endLine) {
+    //   // std::string tempUp =
+    //   //     _textInput[selShift.startLine].substr(selShift.startChar);
+    //   std::string tempDown =
+    //       _textInput[selShift.endLine].substr(0, selShift.endChar);
+    //
+    //   SDL_Surface *tempSurface =
+    //       TTF_RenderText_Solid(_font, tempDown.c_str(), _fontColor);
+    //
+    //   SDL_Texture *tempTexture =
+    //       SDL_CreateTextureFromSurface(_renderer, tempSurface);
+    //   SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
+    //   SDL_Rect tempRect = {0, static_cast<int>((selShift.endLine + 1) *
+    //   32),
+    //                        textWidth, textHeight};
+    //   SDL_SetRenderDrawColor(_renderer, 255, 0, 0, 255);
+    //   SDL_RenderFillRect(_renderer, &tempRect);
+    //   SDL_RenderCopy(_renderer, tempTexture, NULL, &tempRect);
+    // int tempX = textWidth;
+
+    // tempSurface = TTF_RenderText_Solid(_font, tempUp.c_str(), _fontColor);
+    // //
+    // tempTexture = SDL_CreateTextureFromSurface(_renderer, tempSurface);
+    // SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
+    // // tempX -= textWidth;
+    // tempRect = {textWidth - tempX,
+    //             static_cast<int>((selShift.startLine + 1) * 32), textWidth,
+    //             textHeight};
+    // SDL_SetRenderDrawColor(_renderer, 255, 0, 0, 255);
+    // SDL_RenderFillRect(_renderer, &tempRect);
+    // SDL_RenderCopy(_renderer, tempTexture, NULL, &tempRect);
+    // SDL_DestroyTexture(tempTexture);
+    // SDL_FreeSurface(tempSurface);
+    // }
+  }
+}
+
+void InputEditor::addHistory() {
+
+  historyCursor.push_back(cursonOnCurrentChar);
+  historyLine.push_back(cursorOnCurrentLine);
+  historyText.push_back(_textInput);
+
+  if (historyCursor.size() > 16) {
+    historyCursor.erase(historyCursor.begin());
+    historyLine.erase(historyLine.begin());
+    historyText.erase(historyText.begin());
   }
 }

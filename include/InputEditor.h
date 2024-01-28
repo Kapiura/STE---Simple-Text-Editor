@@ -75,6 +75,7 @@ private:
   int cursorOnCurrentLine;
   int cursonOnCurrentChar;
   int startY;
+  int startX;
   bool _cursorVisible;
   std::vector<std::string> selectedText;
   struct selectionShift {
@@ -84,14 +85,25 @@ private:
     int endChar;
   };
   selectionShift selShift;
+  selectionShift prevShift;
+  selectionShift zeroShift = {0, 0, 0, 0};
   std::string copiedText;
 
-  void renderSelectShift();
-
   SDL_Color _fontColor = {0, 0, 0, 255};
+
   SDL_Color _barColor = {198, 206, 206, 255};
   SDL_Color returnBarColor() const { return _barColor; }
+  void setBarColor(SDL_Color color) { _barColor = color; }
   SDL_Color _backgroundColor = {255, 255, 255, 255};
+
+  void renderSelecedTextArea();
+  bool shiftKeyDown;
+
+  std::vector<int> historyCursor;
+  std::vector<int> historyLine;
+  std::vector<std::vector<std::string>> historyText;
+
+  void addHistory();
 };
 
 #endif // TEXTEDITOR_H
