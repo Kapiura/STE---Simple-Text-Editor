@@ -104,6 +104,7 @@ private:
   std::vector<std::vector<std::string>> historyText;
 
   void addHistory();
+  SDL_Color selectedBackColor;
 };
 
 #endif // TEXTEDITOR_H

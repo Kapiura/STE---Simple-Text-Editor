@@ -31,6 +31,7 @@ InputEditor::InputEditor(SDL_Renderer *renderer,
   _textArea.w = editorWindow.getWindowWidth();
   _textArea.x = 0;
   _textArea.y = 0;
+  selShift = {0, 0, 0, 0};
 
   loadFont("assets/jetbrainsmono/JetBrainsMono-Regular.ttf", fontSize);
 
@@ -154,10 +155,10 @@ void InputEditor::handleEvents(SDL_Event &e) {
       break;
     case SDLK_LSHIFT:
     case SDLK_RSHIFT:
-      shiftKeyDown = false;
-      // deleteSelectionShift();
+      selectedBackColor = returnBackgroundColor();
+      shiftKeyDown = true;
+      deleteSelectionShift();
       this->handleShiftButton();
-      prevShift = selShift;
       break;
     default:
       if ((e.key.keysym.sym >= SDLK_SPACE && e.key.keysym.sym <= SDLK_z)) {
@@ -185,6 +186,7 @@ void InputEditor::handleEvents(SDL_Event &e) {
     switch (e.key.keysym.sym) {
     case SDLK_RSHIFT:
     case SDLK_LSHIFT:
+      selectedBackColor = {255, 255, 0, 255};
       shiftKeyDown = false;
       selShift.endLine = cursorOnCurrentLine;
       selShift.endChar = cursonOnCurrentChar + 1;
@@ -208,7 +210,6 @@ void InputEditor::handleReturnKey() {
     cursonOnCurrentChar = -1;
     _textInput.insert(_textInput.begin() + cursorOnCurrentLine, 1, "");
     startX = 0;
-    // addHistory();
   } else if (cursonOnCurrentChar == -1) {
     addHistory();
     std::string temp = _textInput[cursorOnCurrentLine];
@@ -217,7 +218,6 @@ void InputEditor::handleReturnKey() {
     cursonOnCurrentChar = -1;
     startX = 0;
     _textInput.insert(_textInput.begin() + cursorOnCurrentLine, 1, temp);
-    // addHistory();
   } else if (cursonOnCurrentChar > -1 ||
              cursonOnCurrentChar <
                  static_cast<int>(_textInput[cursorOnCurrentLine].size()) - 1) {
@@ -230,9 +230,7 @@ void InputEditor::handleReturnKey() {
     cursonOnCurrentChar = -1;
     startX = 0;
     _textInput.insert(_textInput.begin() + cursorOnCurrentLine, 1, temp);
-    // addHistory();
   }
-  // this->addHistory(_textInput);
 }
 
 void InputEditor::handleUpKey() {
@@ -287,13 +285,11 @@ void InputEditor::handleBackspaceKey() {
     _textInput[cursorOnCurrentLine - 1] += _textInput[cursorOnCurrentLine];
     _textInput.erase(_textInput.begin() + cursorOnCurrentLine);
     cursorOnCurrentLine -= 1;
-    // addHistory();
   } else if (!_textInput[cursorOnCurrentLine].empty()) {
     if (cursonOnCurrentChar > -1) {
       addHistory();
       _textInput[cursorOnCurrentLine].erase(cursonOnCurrentChar, 1);
       cursonOnCurrentChar -= 1;
-      // addHistory();
     }
   } else if (_textInput[cursorOnCurrentLine].empty() &&
 
@@ -456,14 +452,10 @@ void InputEditor::handleEventMouse(SDL_Event &e) {
     else {
       if (scrollY < 0 && count > tempYSize &&
           16 - (count - tempYSize) * 32 < startY) {
-        std::cout << "Scroll down" << std::endl;
         startY -= 32;
       } else if (scrollY > 0 && startY < 0) {
-        std::cout << "Scroll Up" << std::endl;
         startY += 32;
       }
-      std::cout << "StartY = " << startY << "\n";
-      std::cout << "Count = " << count << "\n";
     }
   }
 }
@@ -536,7 +528,7 @@ void InputEditor::lineNumber() {
 void InputEditor::render() {
   // rendering all InputEditor object
   this->renderTextArea();
-  // this->renderSelecedTextArea();
+  this->renderSelecedTextArea();
   this->renderCursor();
   this->renderBlankSpaces();
   this->lineNumber();
@@ -579,99 +571,6 @@ void InputEditor::renderTextArea() {
   }
 }
 
-void InputEditor::renderSelecedTextArea() {
-  int textWidth, textHeight;
-
-  if (!shiftKeyDown || !((selShift.startLine == prevShift.endLine &&
-                          selShift.startChar == prevShift.endChar) &&
-                         (selShift.startLine == selShift.endLine &&
-                          selShift.startChar == selShift.endChar) &&
-                         (selShift.startLine == 0 && selShift.startChar == 0 &&
-                          selShift.endChar == 0 && selShift.endLine == 0))) {
-    for (int i = 0; i < static_cast<int>(_textInput.size()); ++i) {
-      if ((i > selShift.startLine && i < selShift.endLine)) {
-        SDL_Surface *tempSurface =
-            TTF_RenderText_Solid(_font, _textInput[i].c_str(), _fontColor);
-
-        SDL_Texture *tempTexture =
-            SDL_CreateTextureFromSurface(_renderer, tempSurface);
-        SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
-        SDL_Rect tempRect = {0, static_cast<int>((i + 1) * 32), textWidth,
-                             textHeight};
-        SDL_SetRenderDrawColor(_renderer, 255, 0, 0, 255);
-        SDL_RenderFillRect(_renderer, &tempRect);
-        SDL_RenderCopy(_renderer, tempTexture, NULL, &tempRect);
-        SDL_DestroyTexture(tempTexture);
-        SDL_FreeSurface(tempSurface);
-
-      } else if ((i < selShift.startLine && i > selShift.endLine)) {
-        std::swap(selShift.startLine, selShift.endLine);
-        std::swap(selShift.startChar, selShift.endChar);
-        SDL_Surface *tempSurface =
-            TTF_RenderText_Solid(_font, _textInput[i].c_str(), _fontColor);
-
-        SDL_Texture *tempTexture =
-            SDL_CreateTextureFromSurface(_renderer, tempSurface);
-        SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
-        SDL_Rect tempRect = {0, static_cast<int>((i + 1) * 32), textWidth,
-                             textHeight};
-        SDL_SetRenderDrawColor(_renderer, 255, 0, 0, 255);
-        SDL_RenderFillRect(_renderer, &tempRect);
-        SDL_RenderCopy(_renderer, tempTexture, NULL, &tempRect);
-        SDL_DestroyTexture(tempTexture);
-        SDL_FreeSurface(tempSurface);
-        //   SDL_Surface *tempSurface =
-        //       TTF_RenderText_Solid(_font, _textInput[i].c_str(), _fontColor);
-        //
-        //   SDL_Texture *tempTexture =
-        //       SDL_CreateTextureFromSurface(_renderer, tempSurface);
-        //   SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
-        //   SDL_Rect tempRect = {0, static_cast<int>((i + 1) * 32), textWidth,
-        //                        textHeight};
-        //   SDL_SetRenderDrawColor(_renderer, 255, 0, 0, 255);
-        //   SDL_RenderFillRect(_renderer, &tempRect);
-        //   SDL_RenderCopy(_renderer, tempTexture, NULL, &tempRect);
-        //   SDL_DestroyTexture(tempTexture);
-        //   SDL_FreeSurface(tempSurface);
-      }
-    }
-    // if (selShift.startLine < selShift.endLine) {
-    //   // std::string tempUp =
-    //   //     _textInput[selShift.startLine].substr(selShift.startChar);
-    //   std::string tempDown =
-    //       _textInput[selShift.endLine].substr(0, selShift.endChar);
-    //
-    //   SDL_Surface *tempSurface =
-    //       TTF_RenderText_Solid(_font, tempDown.c_str(), _fontColor);
-    //
-    //   SDL_Texture *tempTexture =
-    //       SDL_CreateTextureFromSurface(_renderer, tempSurface);
-    //   SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
-    //   SDL_Rect tempRect = {0, static_cast<int>((selShift.endLine + 1) *
-    //   32),
-    //                        textWidth, textHeight};
-    //   SDL_SetRenderDrawColor(_renderer, 255, 0, 0, 255);
-    //   SDL_RenderFillRect(_renderer, &tempRect);
-    //   SDL_RenderCopy(_renderer, tempTexture, NULL, &tempRect);
-    // int tempX = textWidth;
-
-    // tempSurface = TTF_RenderText_Solid(_font, tempUp.c_str(), _fontColor);
-    // //
-    // tempTexture = SDL_CreateTextureFromSurface(_renderer, tempSurface);
-    // SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
-    // // tempX -= textWidth;
-    // tempRect = {textWidth - tempX,
-    //             static_cast<int>((selShift.startLine + 1) * 32), textWidth,
-    //             textHeight};
-    // SDL_SetRenderDrawColor(_renderer, 255, 0, 0, 255);
-    // SDL_RenderFillRect(_renderer, &tempRect);
-    // SDL_RenderCopy(_renderer, tempTexture, NULL, &tempRect);
-    // SDL_DestroyTexture(tempTexture);
-    // SDL_FreeSurface(tempSurface);
-    // }
-  }
-}
-
 void InputEditor::addHistory() {
 
   historyCursor.push_back(cursonOnCurrentChar);
@@ -682,5 +581,164 @@ void InputEditor::addHistory() {
     historyCursor.erase(historyCursor.begin());
     historyLine.erase(historyLine.begin());
     historyText.erase(historyText.begin());
+  }
+}
+
+void InputEditor::renderSelecedTextArea() {
+  int textWidth, textHeight;
+
+  if (!shiftKeyDown || !((selShift.startLine == prevShift.endLine &&
+                          selShift.startChar == prevShift.endChar) &&
+                         (selShift.startLine == selShift.endLine &&
+                          selShift.startChar == selShift.endChar) &&
+                         (selShift.startLine == 0 && selShift.startChar == 0 &&
+                          selShift.endChar == 0 && selShift.endLine == 0))) {
+    if (selShift.startLine != selShift.endLine) {
+
+      for (int i = 0; i < static_cast<int>(_textInput.size()); ++i) {
+        if ((i > selShift.startLine && i < selShift.endLine &&
+             selShift.endLine > selShift.startLine) ||
+            (i < selShift.startLine && i > selShift.endLine &&
+             selShift.endLine < selShift.startLine)) {
+          if (_textInput[i] != "") {
+            SDL_Surface *tempSurface =
+                TTF_RenderText_Solid(_font, _textInput[i].c_str(), _fontColor);
+
+            SDL_Texture *tempTexture =
+                SDL_CreateTextureFromSurface(_renderer, tempSurface);
+            SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
+            SDL_Rect tempRect = {startX,
+                                 startY + static_cast<int>((i + 1) * 32),
+                                 textWidth, textHeight};
+            SDL_SetRenderDrawColor(_renderer, selectedBackColor.r,
+                                   selectedBackColor.g, selectedBackColor.b,
+                                   255);
+            SDL_RenderFillRect(_renderer, &tempRect);
+            SDL_RenderCopy(_renderer, tempTexture, NULL, &tempRect);
+            SDL_DestroyTexture(tempTexture);
+            SDL_FreeSurface(tempSurface);
+          }
+        }
+      }
+    }
+    if (selShift.startLine == selShift.endLine) {
+      if (selShift.startChar > selShift.endChar) {
+        std::string tempStr = _textInput[selShift.startLine].substr(
+            selShift.endChar, selShift.startChar);
+        SDL_Surface *tempSurface =
+            TTF_RenderText_Solid(_font, tempStr.c_str(), _fontColor);
+        SDL_Texture *tempTexture =
+            SDL_CreateTextureFromSurface(_renderer, tempSurface);
+        SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
+        SDL_Rect tempRect = {
+            startX + (selShift.endChar * 14),
+            startY + static_cast<int>((selShift.startLine + 1) * 32), textWidth,
+            textHeight};
+        SDL_SetRenderDrawColor(_renderer, selectedBackColor.r,
+                               selectedBackColor.g, selectedBackColor.b, 255);
+        SDL_RenderFillRect(_renderer, &tempRect);
+        SDL_RenderCopy(_renderer, tempTexture, NULL, &tempRect);
+        SDL_DestroyTexture(tempTexture);
+        SDL_FreeSurface(tempSurface);
+      } else if (selShift.startChar < selShift.endChar) {
+        std::string tempStr = _textInput[selShift.startLine].substr(
+            selShift.startChar, selShift.endChar);
+        SDL_Surface *tempSurface =
+            TTF_RenderText_Solid(_font, tempStr.c_str(), _fontColor);
+        SDL_Texture *tempTexture =
+            SDL_CreateTextureFromSurface(_renderer, tempSurface);
+        SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
+        SDL_Rect tempRect = {
+            startX + (selShift.startChar * 14),
+            startY + static_cast<int>((selShift.startLine + 1) * 32), textWidth,
+            textHeight};
+        SDL_SetRenderDrawColor(_renderer, selectedBackColor.r,
+                               selectedBackColor.g, selectedBackColor.b, 255);
+        SDL_RenderFillRect(_renderer, &tempRect);
+        SDL_RenderCopy(_renderer, tempTexture, NULL, &tempRect);
+        SDL_DestroyTexture(tempTexture);
+        SDL_FreeSurface(tempSurface);
+      }
+    } else if (selShift.startLine < selShift.endLine &&
+               !_textInput[selShift.endLine]
+                    .substr(0, selShift.endChar)
+                    .empty()) {
+      std::string tempDown =
+          _textInput[selShift.endLine].substr(0, selShift.endChar);
+
+      std::string tempUp =
+          _textInput[selShift.startLine].substr(selShift.startChar);
+
+      SDL_Surface *tempSurface =
+          TTF_RenderText_Solid(_font, tempDown.c_str(), _fontColor);
+
+      SDL_Texture *tempTexture =
+          SDL_CreateTextureFromSurface(_renderer, tempSurface);
+      SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
+      SDL_Rect tempRect = {
+          startX, startY + static_cast<int>((selShift.endLine + 1) * 32),
+          textWidth, textHeight};
+      SDL_SetRenderDrawColor(_renderer, selectedBackColor.r,
+                             selectedBackColor.g, selectedBackColor.b, 255);
+      SDL_RenderFillRect(_renderer, &tempRect);
+      SDL_RenderCopy(_renderer, tempTexture, NULL, &tempRect);
+
+      for (int j = 0; j < static_cast<int>(tempUp.size()); ++j) {
+        std::string letterStr(1, tempUp[j]);
+        tempSurface =
+            TTF_RenderText_Solid(_font, letterStr.c_str(), _fontColor);
+        tempTexture = SDL_CreateTextureFromSurface(_renderer, tempSurface);
+
+        SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
+        SDL_Rect tempRect = {
+            startX + (selShift.startChar * 14) + (j * 14),
+            startY + static_cast<int>((selShift.startLine + 1) * 32), textWidth,
+            textHeight};
+        SDL_SetRenderDrawColor(_renderer, selectedBackColor.r,
+                               selectedBackColor.g, selectedBackColor.b, 255);
+        SDL_RenderFillRect(_renderer, &tempRect);
+        SDL_RenderCopy(_renderer, tempTexture, NULL, &tempRect);
+      }
+
+      SDL_DestroyTexture(tempTexture);
+      SDL_FreeSurface(tempSurface);
+    } else if (selShift.startLine > selShift.endLine &&
+               !_textInput[selShift.startLine]
+                    .substr(0, selShift.startChar)
+                    .empty()) {
+      std::string tempUp =
+          _textInput[selShift.startLine].substr(0, selShift.startChar);
+      std::string tempDown = _textInput[selShift.endLine].substr(
+          selShift.endChar, _textInput[selShift.endChar].size() - 1);
+
+      SDL_Surface *tempSurface =
+          TTF_RenderText_Solid(_font, tempDown.c_str(), _fontColor);
+
+      SDL_Texture *tempTexture =
+          SDL_CreateTextureFromSurface(_renderer, tempSurface);
+      SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
+      SDL_Rect tempRect = {startX + (selShift.endChar * 14),
+                           startY +
+                               static_cast<int>((selShift.endLine + 1) * 32),
+                           textWidth, textHeight};
+      SDL_SetRenderDrawColor(_renderer, selectedBackColor.r,
+                             selectedBackColor.g, selectedBackColor.b, 255);
+      SDL_RenderFillRect(_renderer, &tempRect);
+      SDL_RenderCopy(_renderer, tempTexture, NULL, &tempRect);
+
+      tempSurface = TTF_RenderText_Solid(_font, tempUp.c_str(), _fontColor);
+      tempTexture = SDL_CreateTextureFromSurface(_renderer, tempSurface);
+
+      SDL_QueryTexture(tempTexture, NULL, NULL, &textWidth, &textHeight);
+      tempRect = {startX,
+                  startY + static_cast<int>((selShift.startLine + 1) * 32),
+                  textWidth, textHeight};
+      SDL_SetRenderDrawColor(_renderer, selectedBackColor.r,
+                             selectedBackColor.g, selectedBackColor.b, 255);
+      SDL_RenderFillRect(_renderer, &tempRect);
+      SDL_RenderCopy(_renderer, tempTexture, NULL, &tempRect);
+      SDL_DestroyTexture(tempTexture);
+      SDL_FreeSurface(tempSurface);
+    }
   }
 }
