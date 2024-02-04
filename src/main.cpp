@@ -1,5 +1,6 @@
 #include "../include/Application.h"
-int main() {
-  Application app;
-  app.run();
+int main ()
+{
+	Application app;
+	app.run ();
 }

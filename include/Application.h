@@ -10,14 +10,15 @@
 #define APPLICATION_H
 class Application {
 public:
+  // init
   Application();
   ~Application();
 
   int run();
   void popUpWindow(int &btn);
 
-  SDL_Color returnBackgroundColor() const { return _backgroundColor; }
-  void setBackGroundColor(SDL_Color color) { _backgroundColor = color; }
+  // SDL_Color returnBackgroundColor() const { return _backgroundColor; }
+  // void setBackGroundColor(SDL_Color color) { _backgroundColor = color; }
 
 private:
   EditorWindow *_window;

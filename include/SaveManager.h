@@ -15,18 +15,20 @@ public:
   SaveManager(std::string fileName, std::filesystem::path path);
   ~SaveManager();
 
-  bool isFileExist() const;
   void saveFile(bool &q, SDL_Window *w);
   void saveFile(SDL_Window *w);
   void openFile(bool &q, SDL_Window *w, InputEditor *ie);
-  void PopUp(SDL_Window *w, std::string title, std::string mess);
 
 private:
   std::string _file_name;
-  bool _file_exists;
   std::string _content;
   std::filesystem::path _new_file_path;
   std::vector<std::string> _contentVector;
+
+  bool isFileExist() const;
+  bool _file_exists;
+
+  void PopUp(SDL_Window *w, std::string title, std::string mess);
 };
 
 #endif // SAVEMANAGER_H

@@ -18,23 +18,32 @@
 #define FILEMANAGER
 
 class FileManager {
+
 public:
-  // saving
+  // constructors, destructors
+  // saving window
   FileManager(EditorWindow *w, InputEditor *iw, std::filesystem::path path);
-  // opening
+  // opening window
   FileManager(EditorWindow *w, InputEditor *iw, std::filesystem::path path,
               std::string open);
   ~FileManager();
-  void loadFont(const std::string &fontPath, int fontSize);
-  void renderCurrentPath();
-  void renderFiles();
-  void render();
-  void renderNewFile();
 
+  // returns
   std::filesystem::path getFilePath() const { return _path; }
   std::string getFileNewName() const { return _file_name; }
+  std::string getFileName() const { return _file_name; }
+
+  // render
+  void render();
+  void renderOpen();
+
+  // handle keyboard, mouse events
+  void handleEventKeyboard(SDL_Event &e, bool &q);
+  void handleEventMouseOpen(SDL_Event &e, bool &q);
+  void handleEventMouse(SDL_Event &e, bool &q);
 
 private:
+  // variables
   std::string _file_name;
   int fontSize;
   std::filesystem::path _path;
@@ -46,13 +55,13 @@ private:
   struct dirent *entry;
   DIR *dir;
   std::vector<std::filesystem::path> pathHistory;
+  int currentCursorPosition;
+  // scroll variables
   int currPath;
   int startY;
   int maxY;
   int startMaxY;
-
-  int currentCursorPosition;
-
+  // button
   struct MyButton {
     int btnX;
     int btnY;
@@ -61,35 +70,37 @@ private:
     std::string name;
     SDL_Color buttonColor;
   };
+
   std::vector<MyButton> btnGroup;
   std::vector<std::string> btnNames;
   std::vector<std::array<int, 2>> btnXY;
   std::vector<std::array<int, 2>> btnWH;
 
-public:
+  void loadFont(const std::string &fontPath, int fontSize);
+
+  // render
+  void renderCurrentPath();
+  void renderFiles();
+  void renderNewFile();
+  void renderCursor();
   void renderBlankSpaces();
   void btnRender(MyButton butt);
-  bool IsMouseOver(int mouseX, int mouseY, MyButton btn) const;
   void changeButtonColor(MyButton &btn, SDL_Color col);
-  void handleEventMouse(SDL_Event &e, bool &q);
-  void handleButtonClick(const MyButton &btn, bool &q);
-  void saveNewFile();
-  bool IsMouseOverFolderFile(const std::filesystem::directory_entry &entry,
-                             int index) const;
-  bool IsMouseOverFolder(int mouseX, int mouseY,
-                         const std::filesystem::directory_entry &entry) const;
-  std::string getFileName() const { return _file_name; }
-  void handleEventKeyboard(SDL_Event &e, bool &q);
 
+  // handle keyboard, mouse events
   void handleRight();
   void handleLeft();
   void handleBackspace();
   void handleKeyboard(SDL_Event &e);
-
-  void renderCursor();
-  void renderOpen();
   void handleButtonClickOpen(const MyButton &btn, bool &q);
-  void handleEventMouseOpen(SDL_Event &e, bool &q);
-};
+  bool IsMouseOver(int mouseX, int mouseY, MyButton btn) const;
+  void handleButtonClick(const MyButton &btn, bool &q);
+  bool IsMouseOverFolderFile(const std::filesystem::directory_entry &entry,
+                             int index) const;
+  bool IsMouseOverFolder(int mouseX, int mouseY,
+                         const std::filesystem::directory_entry &entry) const;
 
+  // file handling
+  void saveNewFile();
+};
 #endif // !FILEMANAGER_H

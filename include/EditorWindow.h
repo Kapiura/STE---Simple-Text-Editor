@@ -8,27 +8,28 @@
 
 class EditorWindow {
 public:
+  // init
   EditorWindow(std::string title, int height, int width);
   EditorWindow(std::string t, int h, int w, TTF_Font *font);
   ~EditorWindow();
 
+  // returns
   SDL_Renderer *getRenderer() const;
   SDL_Window *getWindow() const;
   // TTF_Font *getFont() const { return _font; };
-
   int getWindowHeight() const;
   int getWindowWidth() const;
-
   std::string getFileName() const { return _file_name; }
-  void changeNewFileName(std::string newFileName) { _file_name = newFileName; }
+  std::filesystem::path getPath() const { return _path; }
 
+  // update, render
+  void changeNewFileName(std::string newFileName) { _file_name = newFileName; }
+  void setPath(std::filesystem::path p) { _path = p; }
   void update();
   void render();
 
-  std::filesystem::path getPath() const { return _path; }
-  void setPath(std::filesystem::path p) { _path = p; }
-
 private:
+  // variables
   std::string _title;
   std::string _file_name;
   int _height;

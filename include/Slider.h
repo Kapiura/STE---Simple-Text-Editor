@@ -12,23 +12,18 @@ public:
          int h);
   ~Slider();
 
-  void loadFont(const std::string &fontPath, int fontSize);
-
-  void renderBackground();
-  void renderSlider();
-  void renderSliderMove(int mouseX, int mouseY);
-  void setSliderColor(int re, int gr, int bl);
-  void renderValueText();
-  void updateColorText();
   std::string returnColorText();
-  void setValueText();
-  bool isMouseOverSlider(int &mouseX, int &mouseY);
-
-  void setSliderValue(int &yy, bool isclicked);
-  void setMoveSliderColor(int v);
-  void setSliderValue(int v);
 
   int getValue() const { return yMove; };
+
+  void setMoveSliderColor(int v);
+  void setSliderValue(int &yy, bool isclicked);
+  void setSliderValue(int v);
+  void setSliderColor(int re, int gr, int bl);
+
+  void renderSlider();
+  void renderSliderMove(int mouseX, int mouseY);
+  void renderValueText();
 
 private:
   int r;
@@ -48,19 +43,23 @@ private:
   int hMove;
   int rm, gm, bm;
 
-  SDL_Rect value; // text under the silder bar
-  SDL_Color textColor = {0, 0, 0, 255};
-  // default text color for text under the slider
-
-  SDL_Rect button;
-  TTF_Font *_font;
   int min_val = 0;
   int max_val = 255;
-  SDL_Renderer *_renderer;
   int fontSize = 21;
+
+  SDL_Rect value;
+  SDL_Color textColor = {0, 0, 0, 255};
+  SDL_Rect button;
+  TTF_Font *_font;
+  SDL_Renderer *_renderer;
   InputEditor *_inputEditor;
 
   bool isMouseOver;
-};
+  bool isMouseOverSlider(int &mouseX, int &mouseY);
 
+  void loadFont(const std::string &fontPath, int fontSize);
+  void renderBackground();
+  void updateColorText();
+  void setValueText();
+};
 #endif // !SLIDER_H

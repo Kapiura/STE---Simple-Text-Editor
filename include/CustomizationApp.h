@@ -8,9 +8,11 @@
 
 class CustomizationApp {
 public:
+  // init
   CustomizationApp(EditorWindow *edit, InputEditor *in);
   ~CustomizationApp();
 
+  // render
   void render(int &mouseX, int &mouseY, SDL_Event &e);
 
   void changeSliderValue(int &mouseX, int &mouseY, bool isclicked);
@@ -20,9 +22,9 @@ public:
   bool isMouseOverBtns(int &mouseX, int &mouseY, SDL_Rect &temp);
   void buttonFun(int &mouseX, int &mouseY, SDL_Event &e);
 
+  // update
   void setSliderColorBackground();
   void setSliderColorFont();
-
   void changeBackgroundColor(bool ziutek);
 
 private:
