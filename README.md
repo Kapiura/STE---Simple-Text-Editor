@@ -5,6 +5,18 @@ Planuję stworzyć prosty, ale wszechstronny edytor tekstu, który umożliwi uż
 
 W trakcie projektowania kładę szczególny nacisk na ergonomiczność interfejsu, zapewniając użytkownikowi intuicyjną obsługę, co pozwoli na efektywną pracę z edytorem tekstu. Dodatkowo, zamierzam dostosować oprawę graficzną, dbając o estetykę, aby korzystanie z aplikacji było nie tylko funkcjonalne, ale także przyjemne dla oka. Planuję również zaimplementować funkcje umożliwiające zmianę czcionki oraz dostosowywanie kolorów tła i tekstu, co pozwoli użytkownikowi spersonalizować edytor według własnych preferencji. Ostatecznym celem jest stworzenie aplikacji, która nie tylko spełni oczekiwania pod względem funkcjonalności, ale również dostarczy użytkownikowi przyjemne i komfortowe doświadczenie korzystania z edytora tekstu.
 
+## Instalacja
+
+Pobranie repozytorium 
+```
+git clone https://github.com/Kapiura/STE---Simple-Text-Editor.git
+```
+Instalacja oraz uruchomienie 
+```
+./install.sh
+```
+Wymagane bedą zainstalowane biblioteki SL2, SDL2_ttf itd.
+
 ## Harmonogram
 
 | Tydzień  | Opis                                                                             |
