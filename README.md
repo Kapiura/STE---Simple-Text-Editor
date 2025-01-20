@@ -1,5 +1,5 @@
 # STE - Simple Text Editor
-##### Kacper Wiszniewski - II rok ISSP - Projekt C++ 2024 - semestr zimowy
+II rok ISSP - Projekt C++ 2024 - semestr zimowy
 
 Planuję stworzyć prosty, ale wszechstronny edytor tekstu, który umożliwi użytkownikowi tworzenie, zapisywanie, odczytywanie i modyfikowanie dokumentów. Dodatkowo, planuję zaimplementować standardowe operacje edycji, takie jak wycinanie, kopiowanie i wklejanie. Aby osiągnąć te cele, zamierzam wykorzystać bibliotekę programistyczną SDL2, która umożliwi mi stworzenie responsywnego interfejsu użytkownika oraz obsługę różnorodnych operacji na tekście.
 
